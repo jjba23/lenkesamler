@@ -15,9 +15,10 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with iter-vitae. If not, see <https://www.gnu.org/licenses/>.
 
-(define-module (iter-vitae prelude)
+(define-module (lenkesamler prelude)
   #:declarative? #t
   #:use-module (srfi srfi-1)
+  #:use-module (srfi srfi-9)
   #:use-module (srfi srfi-13)
   #:use-module (ice-9 string-fun)
   #:use-module (ice-9 format)
@@ -26,92 +27,43 @@
   #:use-module (ice-9 popen)
   #:use-module (ice-9 textual-ports)
   #:use-module (ice-9 regex)
-  #:export (get-setting assq-ref-all-or-lang
-                        log-info
-                        log-error
-                        my-asset-library
-                        log-message
-                        log
-                        mk-class
-                        syscall
-                        ))
+  #:export (get-setting
+            ~
+            url-record
+            dir-record
+            make-dir
+            dir-record?
+            dir-description
+            dir-urls
+            make-url
+            url-record?
+            url-description
+            url-link))
+
+(define* (~ #:rest args)
+  (apply format
+         (append '(#f) args)))
+
+(define-record-type dir-record
+  (make-dir description urls) dir-record?
+  (description dir-description)
+  (urls dir-urls))
+
+(define* (dir description urls)
+  (make-dir description urls))
+
+(define-record-type url-record
+  (make-url link description) url-record?
+  (link url-link)
+  (description url-description))
+
+(define* (url link
+              #:key (description #f))
+  (make-url link
+            (if (not description) link description)))
 
 (define-syntax-rule (get-setting setting)
-  "Get a setting for iter-vitae, either from persona or from default values."
-  (let* ((default (module-variable (resolve-module '(iter-vitae defaults))
-                                   setting))
-         (user-override (module-variable (resolve-module '(iter-vitae persona))
-                                         setting)))
-    (catch #t
-           (lambda ()
-             (if (equal? #f user-override)
-                 (variable-ref default)
-                 (variable-ref user-override)))
-           (lambda (key . args)
-             (variable-ref default)))))
-
-;; for translatable fields, behave like assq-ref
-;; but by ensuring if 'all is specified, it is
-;; highest priority
-;;
-;; k is expected to be a symbol
-(define-public (assq-ref-all-or-lang al k)
-  (cond
-    ((not (equal? #f
-                  (assq 'all al)))
-     (assq-ref al
-               'all))
-    ((not (equal? #f
-                  (assq k al)))
-     (assq-ref al k))
-    (else (symbol->string k))))
-
-;; mk-class: Convert a list of symbols into a CSS `class` attribute pair.
-;;
-;; This function takes a list of symbols representing CSS class names and
-;; returns an S-expression `(class "class-names")`. The class names are
-;; space-separated in a string. If the input is an empty list or `#f`,
-;; it returns `(class "")`, ensuring that an empty class attribute is still valid.
-(define* (mk-class xs)
-  (cond
-    ((nil? xs)
-     "")
-    (else (string-join (sort (map symbol->string
-                                  (delete-duplicates xs)) string<?) " "))))
-
-(define (log-message msg)
-  (display (format #f "\n~a" msg)))
-
-(define (log msg . args)
-  (log-message (apply format
-                      (append (list #f msg) args))))
-
-(define (log-info msg . args)
-  (log-message (format #f "~a"
-                       (apply format
-                              (append (list #f msg) args)))))
-
-(define (log-error msg . args)
-  (log-message (format #f "[error] ~a"
-                       (apply format
-                              (append (list #f msg) args)))))
-
-(define (syscall cmd)
-  (let* ((process (open-input-pipe cmd))
-         (process-output (get-string-all process)))
-    (close-pipe process) process-output))
-
-(define* (build-asset-library files)
-  (let* ((lib '()))
-    (for-each (lambda (f)
-                (let* ((file-contents (get-string-all (open-input-file f)))
-                       (min-contents (cond
-                                       ((string-suffix? ".css" f)
-                                        (string-replace-substring
-                                         file-contents "\n" ""))
-                                       (else file-contents))))
-                  (set! lib
-                        (assoc-set! lib f min-contents)))) files) lib))
-
-(define my-asset-library
-  (build-asset-library '("resources/css/iter-vitae.olive.min.css")))
+  "Get a setting for lenkesamler."
+  (let* ((user-setting (module-variable (resolve-module '(lenkesamler
+                                                          bookmarks)) setting)))
+    (variable-ref user-setting)))

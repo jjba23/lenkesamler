@@ -31,14 +31,14 @@
              (gnu packages linux)
              (gnu packages compression)
              (gnu packages texinfo)
+             (gnu packages rust-apps)             
              (gnu packages autotools)
              ((guix licenses)
               #:prefix license:))
 
 (packages->manifest (list (specification->package "make")
                           guile-next
-                          darkhttpd
-                          direvent
+                          watchexec
                           texinfo
                           guile-documenta
                           guile-ares-rs))

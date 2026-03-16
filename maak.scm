@@ -30,7 +30,7 @@
   "https://jointhefreeworld.org/static/css/jointhefreeworld.css")
 
 (define project-name
-  'iter-vitae)
+  'lenkesamler)
 
 (define hot-reload-file-types
   '(scm))
@@ -39,7 +39,7 @@
 
 (define (help)
   "Display program help screen."
-  (time-machine-program-shell '("iter-vitae --help")))
+  (time-machine-program-shell '("lenkesamler --help")))
 
 (define (default)
   "Default task to run, call program's help."
@@ -81,47 +81,28 @@
 (define (package-docker)
   "Create a Docker image for Iter Vitae."
   (time-machine-manifest-shell '("guix pack --file=./guix.scm"
-                                 "--format=docker" "--image-tag=iter-vitae"
+                                 "--format=docker" "--image-tag=lenkesamler"
                                  "-S /bin=bin"
                                  "bash coreutils util-linux-with-udev guile")))
 
 (define (dev-run* persona locale)
   (time-machine-manifest-shell (list
-                                "guile -L ./src -c '((@(iter-vitae main) main))'"
+                                "guile -L ./src -c '((@(lenkesamler main) main))'"
                                 (~
-                                 "--file /home/joe/hacking/iter-vitae/populus/~a.scm"
+                                 "--file /home/joe/hacking/lenkesamler/bookmarks/~a.scm"
                                  persona) "--destination ./dist"
                                 (~ "--locale ~a" locale)
                                 "--resources ./resources")
                                #:verbose? #t))
 
-(define (run* persona locale)
-  (time-machine-program-shell (list (~ "iter-vitae --file ./populus/~a.scm"
+(define (run* persona)
+  (time-machine-program-shell (list (~ "lenkesamler --file ./bookmarks/~a.scm"
                                        persona) "--destination ./dist"
-                                    (~ "--locale ~a" locale))))
+                                    )))
 
 (define (run)
-  (run* 'joe
-        'en))
+  (run* 'joe))
 
-(define (dev-run)
-  (dev-run* 'joe
-            'en))
-
-(define (run-joe-en)
-  (run* 'joe
-        'en))
-
-(define (run-joe-nl)
-  (run* 'joe
-        'nl))
-
-(define (dev-run-joe-en)
-  (dev-run* 'joe
-            'en))
-(define (dev-run-joe-nl)
-  (dev-run* 'joe
-            'nl))
 
 (define (hot-reload)
   "Hot-reloading developer's setup."
@@ -134,7 +115,7 @@
                                      "--on-busy-update=restart"
                                      "--shell bash"
                                      "--watch . --"
-                                     "maak dev-run-joe-en")))
+                                     "maak run")))
 
 (define (hr)
   "Alias to hot-reloading."
@@ -143,7 +124,3 @@
 (define (dev)
   "Developer's setup."
   (hot-reload))
-
-(define (olive-css)
-  ($ '("curl --verbose --output \"./resources/css/iter-vitae.olive.min.css\""
-       "\"https://codeberg.org/jjba23/olive-css/raw/branch/trunk/resources/css/iter-vitae.olive.min.css\"")))

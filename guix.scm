@@ -31,9 +31,9 @@
 (define %source-dir
   (dirname (current-filename)))
 
-(define-public iter-vitae
+(define-public lenkesamler
   (package
-    (name "iter-vitae")
+    (name "lenkesamler")
     (version "dev")
     (source
      (local-file %source-dir
@@ -50,31 +50,19 @@
                                                   "/share")))
                         (install-file "resources/help.txt"
                                       (string-append share "/resources/"))
-                        (install-file "resources/css/iter-vitae.olive.min.css"
-                                      (string-append share "/resources/css"))
-                        (install-file "scripts/iter-vitae" bin)
+                        (install-file "scripts/lenkesamler" bin)
                         (install-file "scripts/log.bash"
                                       (string-append share "/scripts/"))
-                        (chmod (string-append bin "/iter-vitae") #o755)))))))
+                        (chmod (string-append bin "/lenkesamler") #o755)))))))
     
     (build-system guile-build-system)
     (native-inputs (list guile-3.0))
     (inputs (list guile-3.0 bash-minimal))
     (synopsis
-     "Resume / @acronym{CV, Curriculum Vitae} generator written in Guile Scheme")
+     "")
     (description
-     "Iter Vitae is a command-line utility that allows you to generate a
-Resume / @acronym{CV, Curriculum Vitae}, by reading a S-expression version
-of your CV details (in Scheme code).
-
-With a @acronym{MVC, model-view-controller} approach,
-it lets you separate the data from the presentation (how the document looks).
-
-This tool creates a web-site version of your CV (using SXML and Olive CSS),
-and is designed for long-term use, so you can update and evolve your CV over the years.
-The program supports multilingual content and is fully extensible.")
-    (home-page "https://codeberg.org/jjba23/iter-vitae")
+     "")
+    (home-page "https://codeberg.org/jjba23/lenkesamler")
     (license license:agpl3+)))
 
-iter-vitae
-
+lenkesamler
