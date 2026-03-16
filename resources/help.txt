@@ -1,0 +1,16 @@
+
++----------------------------------------------------------------------------+
+Lenkesamler:
+    Your bookmark manager and sync tool.
+    
+    See more at: https://codeberg.org/jjba23/lenkesamler
+    Software licensed under the GNU AGPL v3 or newer.
+    
+USAGE: lenkesamler [OPTIONS]
+OPTIONS:
+    TODO!
+        
+    -h, --help
+        Display this help message and exit.
+
++----------------------------------------------------------------------------+
