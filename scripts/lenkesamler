@@ -60,7 +60,7 @@ resources_arg="${resources_dir}"
 
 guile_cmd_args=(
   "-L" "${scheme_sources_dir}"
-  "-c" "((@(iter-vitae main) main))"
+  "-c" "((@(lenkesamler main) main))"
 )
 
 while true; do

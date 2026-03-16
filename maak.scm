@@ -85,13 +85,12 @@
                                  "-S /bin=bin"
                                  "bash coreutils util-linux-with-udev guile")))
 
-(define (dev-run* persona locale)
+(define (dev-run* persona)
   (time-machine-manifest-shell (list
                                 "guile -L ./src -c '((@(lenkesamler main) main))'"
                                 (~
-                                 "--file /home/joe/hacking/lenkesamler/bookmarks/~a.scm"
+                                 "--file /home/joe/Hacking/lenkesamler/bookmarks/~a.scm"
                                  persona) "--destination ./dist"
-                                (~ "--locale ~a" locale)
                                 "--resources ./resources")
                                #:verbose? #t))
 
@@ -103,6 +102,8 @@
 (define (run)
   (run* 'joe))
 
+(define (dev-run)
+  (dev-run* 'joe))
 
 (define (hot-reload)
   "Hot-reloading developer's setup."

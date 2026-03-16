@@ -38,6 +38,7 @@
 
 (packages->manifest (list (specification->package "make")
                           guile-next
+                          guile-kracht
                           watchexec
                           texinfo
                           guile-documenta

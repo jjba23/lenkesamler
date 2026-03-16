@@ -16,7 +16,8 @@
 ;; along with lenkesamler. If not, see <https://www.gnu.org/licenses/>.
 
 (define-module (lenkesamler bookmarks)
-  #:declarative? #t)
+  #:declarative? #t
+  #:use-module (lenkesamler prelude))
 
 (define joe-bookmarks
   (list (dir "jointhefreeworld"
