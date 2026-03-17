@@ -100,9 +100,11 @@
                                     )))
 
 (define (run)
+  "Run lenkesamler."
   (run* 'joe))
 
 (define (dev-run)
+  "Run lenkesamler (dev)."  
   (dev-run* 'joe))
 
 (define (hot-reload)
