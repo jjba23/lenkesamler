@@ -31,7 +31,6 @@ Then it can translate between this "central bookmark definition" into many other
     [ Ops P ]
         url: Grafana | https://grafana.prod-backend.vdbinfra.nl
 
-
     [ Ops T ]
         url: Grafana | https://grafana.test-backend.vdbinfra.nl
 
@@ -42,68 +41,31 @@ url: Codeberg | https://codeberg.org/jjba23
 
 ** Browser Bookmark File Format
 
-Originally a format driven by Netscape, bookmarks are stored in a HTML file called Bookmark.htm
+The *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks. 
 
-The file starts with the following text:
+Because it is built on weird non-compliant, but somehow valid HTML, it is human-readable and easily parsed by simple scripts.
+
+The format uses basic HTML tags to organize links and folder hierarchies:
+
+- ~<!DOCTYPE NETSCAPE-Bookmark-file-1>~ mandatory header that identifies the file type.
+- ~<dl>~ definition list: Acts as a container for a group of bookmarks. Nested ~<dl>~ tags represent subfolders.
+- ~<dt>~ definition term: Indicates an item in the list, preceding either a folder or a bookmark.
+- ~<h3>~ represents a folder name. It often includes an ~ADD_DATE~ attribute (Unix timestamp).
+- ~<a>~ Represents the actual bookmark. It contains the ~URL~ (~HREF~) and metadata like ~ADD_DATE~ or the site's favicon (~ICON~).
 
 #+begin_src html
 <!DOCTYPE NETSCAPE-Bookmark-file-1>
-    <title>Bookmarks</title>
-    <h1>Bookmarks</h1>
-    <dl>
-    {item}
-    {item}
-    {item}
-    ...
-    </dl>
-#+end_src
-    
-An item may be a subfolder, shortcut, feed, Web Slice, or icon.
-
-If {item} refers to a subfolder, it is:
-#+begin_src html
-    <DT><H3 FOLDED ADD_DATE="{date}">{title}</H3>
+<TITLE>Bookmarks</TITLE>
+<H1>Bookmarks Menu</H1>
+<DL><p>
+    <DT><H3 ADD_DATE="1610000000">Work Links</H3>
     <DL><p>
-        {item}
-        {item}
-        {item}
-        .
-        .
-        .
+        <DT><A HREF="https://google.com" ADD_DATE="1610000500">Google</A>
+        <DT><A HREF="https://github.com" ADD_DATE="1610000600">GitHub</A>
     </DL><p>
+    <DT><A HREF="https://wikipedia.org" ADD_DATE="1610000700">Wikipedia</A>
+</DL><p>
 #+end_src
-
-If {item} refers to a shortcut, it is:
-
-#+begin_src html
-    <DT><A HREF="{url}" ADD_DATE="{date}" LAST_VISIT="{date}"
-    LAST_MODIFIED="{date}">{title}</A>
-#+end_src
-
-If {item} refers to a feed, it is:
-
-#+begin_src html
-FEED="true"
-FEEDURL="href... "
-#+end_src
-
-If {item} refers to a Web Slice, it is:
-
-#+begin_src html
-WEBSLICE="true"
-ISLIVEPREVIEW="true"
-
-PREVIEWSIZE="w x h"
-#+end_src
-
-If {item} refers to an icon, it is:
-
-#+begin_src html
-{item}
-
-ICON_URI="href... "
-#+end_src
-
 
 --------------
 
