@@ -8,9 +8,89 @@
 
 Lenkesamler - your bookmark manager and sync tool
 
+🚧 Work in Progress
+
 If you like my work, please support me by [[https://bmc.link/jjbigorra][buying me a cup of coffee ☕]] so I can continue with a lot of motivation.
 
 ---------------
+
+Lenkesamler lets you define your bookmarks in an extremely expressive and powerful way, using the world's most flexible programming language, Lisp (Guile Scheme)
+
+Then it can translate between this "central bookmark definition" into many other formats and outputs, including browser bookmarks (to import in Firefox, Chromium, etc.), CLI output, and more.
+
+** CLI Format
+
+#+begin_example
+[ jointhefreeworld ]
+    url: jointhefreeworld.org | https://jointhefreeworld.org
+    url: WikiMusic | https://wikimusic.jointhefreeworld.org
+
+[ Work ]
+    url: Slack | https://app.slack.com/client/T1XNW2SF5/C08UHE7KM99
+
+    [ Ops P ]
+        url: Grafana | https://grafana.prod-backend.vdbinfra.nl
+
+
+    [ Ops T ]
+        url: Grafana | https://grafana.test-backend.vdbinfra.nl
+
+url: WhatsApp | https://web.whatsapp.com/
+url: Mastodon | https://mastodon.social
+url: Codeberg | https://codeberg.org/jjba23
+#+end_example
+
+** Browser Bookmark File Format
+
+Originally a format driven by Netscape, bookmarks are stored in a HTML file called Bookmark.htm
+
+The file starts with the following text:
+
+#+begin_src html
+<!DOCTYPE NETSCAPE-Bookmark-file-1>
+    <title>Bookmarks</title>
+    <h1>Bookmarks</h1>
+    <dl>
+    {item}
+    {item}
+    {item}
+    ...
+    </dl>
+#+end_src
+    
+An item may be a subfolder, shortcut, feed, Web Slice, or icon.
+
+If {item} refers to a subfolder, it is:
+
+    <DT><H3 FOLDED ADD_DATE="{date}">{title}</H3>
+    <DL><p>
+        {item}
+        {item}
+        {item}
+        .
+        .
+        .
+    </DL><p>
+If {item} refers to a shortcut, it is:
+
+    <DT><A HREF="{url}" ADD_DATE="{date}" LAST_VISIT="{date}"
+    LAST_MODIFIED="{date}">{title}</A>
+If {item} refers to a feed, it is:
+
+FEED="true"
+FEEDURL="href... "
+If {item} refers to a Web Slice, it is:
+
+WEBSLICE="true"
+ISLIVEPREVIEW="true"
+
+PREVIEWSIZE="w x h"
+If {item} refers to an icon, it is:
+
+{item}
+
+ICON_URI="href... "
+Note  
 
 --------------
 
