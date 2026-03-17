@@ -90,5 +90,4 @@
                              (url-link x)
                              (format #f "https://~a"
                                      (url-link x)))))
-                (else (format #t "\n~a~a"
-                              (make-string indent #\space) x)))) xs))
+                (else (throw "unknown data type for bookmark" x)))) xs))

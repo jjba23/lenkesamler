@@ -61,7 +61,7 @@ The file starts with the following text:
 An item may be a subfolder, shortcut, feed, Web Slice, or icon.
 
 If {item} refers to a subfolder, it is:
-
+#+begin_src html
     <DT><H3 FOLDED ADD_DATE="{date}">{title}</H3>
     <DL><p>
         {item}
@@ -71,26 +71,39 @@ If {item} refers to a subfolder, it is:
         .
         .
     </DL><p>
+#+end_src
+
 If {item} refers to a shortcut, it is:
 
+#+begin_src html
     <DT><A HREF="{url}" ADD_DATE="{date}" LAST_VISIT="{date}"
     LAST_MODIFIED="{date}">{title}</A>
+#+end_src
+
 If {item} refers to a feed, it is:
 
+#+begin_src html
 FEED="true"
 FEEDURL="href... "
+#+end_src
+
 If {item} refers to a Web Slice, it is:
 
+#+begin_src html
 WEBSLICE="true"
 ISLIVEPREVIEW="true"
 
 PREVIEWSIZE="w x h"
+#+end_src
+
 If {item} refers to an icon, it is:
 
+#+begin_src html
 {item}
 
 ICON_URI="href... "
-Note  
+#+end_src
+
 
 --------------
 

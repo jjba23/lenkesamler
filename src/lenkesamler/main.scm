@@ -16,9 +16,10 @@
 ;; along with lenkesamler. If not, see <https://www.gnu.org/licenses/>.
 
 (define-module (lenkesamler main)
-  #:declarative? #t
+  #:declarative? #f
   #:use-module (ice-9 getopt-long)
   #:use-module (lenkesamler prelude)
+  #:use-module (lenkesamler html)
   #:export (main))
 
 (define* (main #:key (args (command-line)))
@@ -59,5 +60,7 @@
     (simple-bookmark-logger (get-setting 'lenkesamler-bookmarks))
     (newline)
     (newline)
+    (display (with-output-to-string (lambda ()
+                                      (sxml->xml (html-bookmark-logger (get-setting 'lenkesamler-bookmarks))))))
 
     ))
