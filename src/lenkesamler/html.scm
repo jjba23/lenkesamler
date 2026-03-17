@@ -261,9 +261,9 @@ formatting."
 ;; ================================
 
 (define (dir-to-html x)
-  `((dl (h3 ,(dir-name x))
-        ,(map parse-lenksamler-to-html
-              (dir-urls x)))))
+  `((dt (h3 ,(dir-name x)))
+    (dl (p ,(map parse-lenksamler-to-html
+                 (dir-urls x))))))
 
 (define (url-to-html x)
   `((dt (a (@ (href ,(if (string-prefix? "http"
@@ -286,9 +286,8 @@ formatting."
          (tree `("<!DOCTYPE NETSCAPE-Bookmark-file-1>" (meta (@ (http-equiv
                                                                  Content-Type)
                                                                 (content
-                                                                 "text/html; charset=UTF-8"))
-                                                             "")
+                                                                 "text/html; charset=UTF-8")))
                  (title "Bookmarks")
                  (h1 "Bookmarks")
-                 (dl ,parsed-nodes))))
+                 (dl (p ,parsed-nodes)))))
     tree))
