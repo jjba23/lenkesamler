@@ -47,17 +47,17 @@
          ;; (locale (option-ref options
          ;; 'locale "en"))
          )
-    ;; (log-info
-    ;; "Iter Vitae: Generate an attractive, modern and customizable Curriculum Vitae/Resume")
-    ;; (render-curriculum #:locale (string->symbol locale)
-    ;; #:destination destination
-    ;; #:resources resources
-    ;; #:file file)
+    (display "
+---------------------------------------------------------
+")
     (display "Lenkesamler")
-    (write (format #f "\nloading file: ~a" file))
+    (display (format #f "\n  loading file: ~a" file))
+    (display "
+---------------------------------------------------------
+")
     (load file)
-    ;; (log-info "bookmarks: ~a"
-    ;;           (get-setting 'lenkesamler-bookmarks))
     (simple-bookmark-logger (get-setting 'lenkesamler-bookmarks))
+    (newline)
+    (newline)
 
     ))

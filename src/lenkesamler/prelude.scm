@@ -75,11 +75,11 @@
   (for-each (lambda (x)
               (cond
                 ((dir-record? x)
-                 (format #t "\n\n~adir: ~a"
+                 (format #t "\n\n~a[ ~a ]"
                          (make-string indent #\space)
                          (dir-name x))
                  (simple-bookmark-logger (dir-urls x)
-                                         #:indent (+ 2 indent))
+                                         #:indent (+ 4 indent))
                  (newline))
                 ((url-record? x)
                  (format #t "\n~aurl: ~a | ~a"

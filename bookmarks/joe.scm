@@ -19,19 +19,33 @@
   #:declarative? #t
   #:use-module (lenkesamler prelude))
 
+(define jointhefreeworld-dir
+  (dir "jointhefreeworld"
+       (url "jointhefreeworld.org")
+       (url "wikimusic.jointhefreeworld.org"
+            #:name "WikiMusic")
+       (url "lucidplan.jointhefreeworld.org"
+            #:name "LucidPlan")
+       (url "byggsteg.jointhefreeworld.org"
+            #:name "Byggsteg")
+       (url "oculuslambda.jointhefreeworld.org"
+            #:name "OculusLambda")
+       (url "hygguile.jointhefreeworld.org"
+            #:name "Hygguile")))
+
+(define work-dir
+  (dir "Work"
+       (url "app.slack.com/client/T1XNW2SF5/C08UHE7KM99"
+            #:name "Slack")
+       (dir "Ops P"
+            (url "grafana.prod-backend.vdbinfra.nl"
+                 #:name "Grafana"))
+       (dir "Ops T"
+            (url "grafana.test-backend.vdbinfra.nl"
+                 #:name "Grafana"))))
+
 (define joe-bookmarks
-  (list (dir "jointhefreeworld"
-             (url "jointhefreeworld.org")
-             (url "wikimusic.jointhefreeworld.org"
-                  #:name "WikiMusic")
-             (url "lucidplan.jointhefreeworld.org"
-                  #:name "LucidPlan")
-             (url "byggsteg.jointhefreeworld.org"
-                  #:name "Byggsteg")
-             (url "oculuslambda.jointhefreeworld.org"
-                  #:name "OculusLambda")
-             (url "hygguile.jointhefreeworld.org"
-                  #:name "Hygguile"))
+  (list jointhefreeworld-dir work-dir
         (url "web.whatsapp.com/"
              #:name "WhatsApp")
         (url "mastodon.social"
