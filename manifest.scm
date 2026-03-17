@@ -33,12 +33,12 @@
              (gnu packages texinfo)
              (gnu packages rust-apps)             
              (gnu packages autotools)
+             (gnu packages build-tools)             
              ((guix licenses)
               #:prefix license:))
 
-(packages->manifest (list (specification->package "make")
-                          guile-next
-                          guile-kracht
+(packages->manifest (list maak
+                          guile-3.0-latest
                           watchexec
                           texinfo
                           guile-documenta

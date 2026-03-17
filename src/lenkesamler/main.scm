@@ -19,7 +19,6 @@
   #:declarative? #t
   #:use-module (ice-9 getopt-long)
   #:use-module (lenkesamler prelude)
-  #:use-module (kracht prelude)
   #:export (main))
 
 (define* (main #:key (args (command-line)))
@@ -46,18 +45,19 @@
          (resources (option-ref options
                                 'resources #f))
          ;; (locale (option-ref options
-         ;;                     'locale "en"))
+         ;; 'locale "en"))
          )
     ;; (log-info
-    ;;  "Iter Vitae: Generate an attractive, modern and customizable Curriculum Vitae/Resume")
+    ;; "Iter Vitae: Generate an attractive, modern and customizable Curriculum Vitae/Resume")
     ;; (render-curriculum #:locale (string->symbol locale)
-    ;;                    #:destination destination
-    ;;                    #:resources resources
-    ;;                    #:file file)
-    (log-info "Lenkesamler")
-    (log-info "file: ~a" file)
-    (log-info "~a" (resolve-module '(lenkesamler
-                                                          bookmarks)))
-        (log-info "bookmarks: ~a" (get-setting 'bookmarks))
-    
+    ;; #:destination destination
+    ;; #:resources resources
+    ;; #:file file)
+    (display "Lenkesamler")
+    (write (format #f "\nloading file: ~a" file))
+    (load file)
+    ;; (log-info "bookmarks: ~a"
+    ;;           (get-setting 'lenkesamler-bookmarks))
+    (simple-bookmark-logger (get-setting 'lenkesamler-bookmarks))
+
     ))

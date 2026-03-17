@@ -57,8 +57,7 @@
     
     (build-system guile-build-system)
     (native-inputs (list guile-3.0))
-    (propagated-inputs (list guile-kracht))
-    (inputs (list guile-3.0 bash-minimal guile-kracht))
+    (inputs (list guile-3.0 bash-minimal))
     (synopsis
      "")
     (description

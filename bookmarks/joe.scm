@@ -21,17 +21,23 @@
 
 (define joe-bookmarks
   (list (dir "jointhefreeworld"
-             (list (url "jointhefreeworld.org" "https://jointhefreeworld.org")
-                   (url "WikiMusic" "https://wikimusic.jointhefreeworld.org")
-                   (url "LucidPlan" "https://lucidplan.jointhefreeworld.org")
-                   (url "Byggsteg" "https://byggsteg.jointhefreeworld.org")
-                   (url "OculusLambda"
-                        "https://oculuslambda.jointhefreeworld.org")
-                   (url "Hygguile" "https://hygguile.jointhefreeworld.org")))
-        (url "WhatsApp" "https://web.whatsapp.com/")
-        (url "Mastodon" "https://mastodon.social")
-        (url "Codeberg" "https://codeberg.org/jjba23")
-        ))
+             (url "jointhefreeworld.org")
+             (url "wikimusic.jointhefreeworld.org"
+                  #:name "WikiMusic")
+             (url "lucidplan.jointhefreeworld.org"
+                  #:name "LucidPlan")
+             (url "byggsteg.jointhefreeworld.org"
+                  #:name "Byggsteg")
+             (url "oculuslambda.jointhefreeworld.org"
+                  #:name "OculusLambda")
+             (url "hygguile.jointhefreeworld.org"
+                  #:name "Hygguile"))
+        (url "web.whatsapp.com/"
+             #:name "WhatsApp")
+        (url "mastodon.social"
+             #:name "Mastodon")
+        (url "codeberg.org/jjba23"
+             #:name "Codeberg")))
 
-(define bookmarks
+(define lenkesamler-bookmarks
   joe-bookmarks)

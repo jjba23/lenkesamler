@@ -27,43 +27,68 @@
   #:use-module (ice-9 popen)
   #:use-module (ice-9 textual-ports)
   #:use-module (ice-9 regex)
-  #:export (get-setting
-            ~
-            url-record
-            dir-record
-            make-dir
-            dir-record?
-            dir-description
-            dir-urls
-            make-url
-            url-record?
-            url-description
-            url-link))
+  #:export (get-setting ~
+                        simple-bookmark-logger
+                        url-record
+                        dir-record
+                        make-dir
+                        dir
+                        url
+                        dir-record?
+                        dir-name
+                        dir-urls
+                        make-url
+                        url-record?
+                        url-name
+                        url-link))
 
 (define* (~ #:rest args)
   (apply format
          (append '(#f) args)))
 
 (define-record-type dir-record
-  (make-dir description urls) dir-record?
-  (description dir-description)
+  (make-dir name urls) dir-record?
+  (name dir-name)
   (urls dir-urls))
 
-(define* (dir description urls)
-  (make-dir description urls))
+(define* (dir name . urls)
+  (make-dir name urls))
 
 (define-record-type url-record
-  (make-url link description) url-record?
+  (make-url link name) url-record?
   (link url-link)
-  (description url-description))
+  (name url-name))
 
 (define* (url link
-              #:key (description #f))
+              #:key (name #f))
   (make-url link
-            (if (not description) link description)))
+            (if (not name) link name)))
 
 (define-syntax-rule (get-setting setting)
   "Get a setting for lenkesamler."
   (let* ((user-setting (module-variable (resolve-module '(lenkesamler
                                                           bookmarks)) setting)))
     (variable-ref user-setting)))
+
+(define* (simple-bookmark-logger xs
+                                 #:key (indent 0))
+  (for-each (lambda (x)
+              (cond
+                ((dir-record? x)
+                 (format #t "\n\n~adir: ~a"
+                         (make-string indent #\space)
+                         (dir-name x))
+                 (simple-bookmark-logger (dir-urls x)
+                                         #:indent (+ 2 indent))
+                 (newline))
+                ((url-record? x)
+                 (format #t "\n~aurl: ~a | ~a"
+                         (make-string indent #\space)
+                         (url-name x)
+                         (if (string-prefix? "http"
+                                             (url-link x))
+                             (url-link x)
+                             (format #f "https://~a"
+                                     (url-link x)))))
+                (else (format #t "\n~a~a"
+                              (make-string indent #\space) x)))) xs))
