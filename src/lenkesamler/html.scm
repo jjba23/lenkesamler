@@ -261,13 +261,13 @@ formatting."
 ;; ================================
 
 (define (dir-to-html x)
-  `("<DT>" (H3 ,(dir-name x))
+  `("\n<DT>" (H3 ,(dir-name x))
     (DL "<P>"
         ,@(map parse-lenksamler-to-html
                (dir-urls x)) "<P>")))
 
 (define (url-to-html x)
-  `("<DT>" (A (@ (href ,(if (string-prefix? "http"
+  `("\n<DT>" (A (@ (href ,(if (string-prefix? "http"
                                             (url-link x))
                             (url-link x)
                             (format #f "https://~a"
@@ -290,7 +290,7 @@ formatting."
                                                                  "text/html; charset=UTF-8")))
                  (TITLE "Bookmarks")
                  (H1 "Bookmarks")
-                 (DL "<P>"
-                     ,@parsed-nodes)
-                 "<P>")))
+                 "\n<DL><P>"
+                 ,@parsed-nodes
+                 "\n</DL><P>")))
     tree))
