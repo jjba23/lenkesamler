@@ -261,17 +261,18 @@ formatting."
 ;; ================================
 
 (define (dir-to-html x)
-  `((dt (h3 ,(dir-name x)))
-    (dl (p ,(map parse-lenksamler-to-html
-                 (dir-urls x))))))
+  `("<DT>" (H3 ,(dir-name x))
+    (DL "<P>"
+        ,@(map parse-lenksamler-to-html
+               (dir-urls x)) "<P>")))
 
 (define (url-to-html x)
-  `((dt (a (@ (href ,(if (string-prefix? "http"
-                                         (url-link x))
-                         (url-link x)
-                         (format #f "https://~a"
-                                 (url-link x)))))
-           ,(url-name x)))))
+  `("<DT>" (A (@ (href ,(if (string-prefix? "http"
+                                            (url-link x))
+                            (url-link x)
+                            (format #f "https://~a"
+                                    (url-link x)))))
+              ,(url-name x))))
 
 (define (parse-lenksamler-to-html x)
   (cond
@@ -283,11 +284,13 @@ formatting."
 
 (define* (html-bookmark-logger xs)
   (let* ((parsed-nodes (map parse-lenksamler-to-html xs))
-         (tree `("<!DOCTYPE NETSCAPE-Bookmark-file-1>" (meta (@ (http-equiv
+         (tree `("<!DOCTYPE NETSCAPE-Bookmark-file-1>" (META (@ (http-equiv
                                                                  Content-Type)
                                                                 (content
                                                                  "text/html; charset=UTF-8")))
-                 (title "Bookmarks")
-                 (h1 "Bookmarks")
-                 (dl (p ,parsed-nodes)))))
+                 (TITLE "Bookmarks")
+                 (H1 "Bookmarks")
+                 (DL "<P>"
+                     ,@parsed-nodes)
+                 "<P>")))
     tree))
