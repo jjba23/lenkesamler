@@ -41,9 +41,9 @@ url: Codeberg | https://codeberg.org/jjba23
 
 ** Browser Bookmark File Format
 
-The *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks. 
+The archaic *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks. 
 
-Because it is built on weird non-compliant, but somehow valid HTML, it is human-readable and easily parsed by simple scripts.
+This format is the definition of "legacy" in software. It is built on weird non-compliant, semi-valid HTML from the 1990's.
 
 The format uses basic HTML tags to organize links and folder hierarchies:
 
