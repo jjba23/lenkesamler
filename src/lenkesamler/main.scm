@@ -62,13 +62,13 @@ Lenkesamler: Your bookmark manager and sync tool powered by Lisp
       (cond
         ((eq? mode
               'cli)
-         (cli-bookmark-renderer user-bookmarks))
+         (display (cli-bookmark-renderer user-bookmarks)))
         ((eq? mode
               'org)
-         (org-bookmark-renderer user-bookmarks))
+         (display (org-bookmark-renderer user-bookmarks)))
         ((eq? mode
               'json)
-         (json-bookmark-renderer user-bookmarks))
+         (display (json-bookmark-renderer user-bookmarks)))
         ((eq? mode
               'netscape)
          (display (with-output-to-string (lambda ()

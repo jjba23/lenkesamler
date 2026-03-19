@@ -32,22 +32,27 @@
 
 (define* (org-bookmark-renderer xs
                                 #:key (indent 1))
-  (for-each (lambda (x)
-              (cond
-                ((dir-record? x)
-                 (format #t "\n\n~a ~a"
-                         (make-string indent #\*)
-                         (dir-name x))
-                 (org-bookmark-renderer (dir-items x)
-                                        #:indent (+ 1 indent))
-                 (newline))
-                ((url-record? x)
-                 (format #t "\n- [[~a][~a]]"
-                         (if (string-prefix? "http"
-                                             (url-link x))
-                             (url-link x)
-                             (format #f "https://~a"
-                                     (url-link x)))
-                         (url-name x)))
-                (else (throw "unknown data type for bookmark" x)))) xs)
-  (newline))
+  (with-output-to-string (lambda ()
+                           (for-each (lambda (x)
+                                       (cond
+                                         ((dir-record? x)
+                                          (format #t "\n\n~a ~a"
+                                                  (make-string indent #\*)
+                                                  (dir-name x))
+                                          (org-bookmark-renderer (dir-items x)
+                                                                 #:indent (+ 1
+                                                                           indent))
+                                          (newline))
+                                         ((url-record? x)
+                                          (format #t "\n- [[~a][~a]]"
+                                                  (if (string-prefix? "http"
+                                                                      (url-link
+                                                                       x))
+                                                      (url-link x)
+                                                      (format #f "https://~a"
+                                                              (url-link x)))
+                                                  (url-name x)))
+                                         (else (throw
+                                                "unknown data type for bookmark"
+                                                x)))) xs)
+                           (newline))))

@@ -32,30 +32,36 @@
 
 (define* (cli-bookmark-renderer xs
                                 #:key (indent 0))
-  (for-each (lambda (x)
-              (cond
-                ((dir-record? x)
-                 (format #t "\n\n~a[ ~a ]"
-                         (make-string indent #\space)
-                         (dir-name x))
-                 (cli-bookmark-renderer (dir-items x)
-                                        #:indent (+ 4 indent))
-                 (newline))
-                ((url-record? x)
-                 (format #t
-                         "\n~aurl: ~a~a~a | ~a"
-                         (make-string indent #\space)
-                         (url-name x)
-                         (if (url-added x)
-                             (format #f " added: ~a "
-                                     (url-added x)) "")
-                         (if (url-tags x)
-                             (format #f " tags: ~a "
-                                     (url-tags x)) "")
-                         (if (string-prefix? "http"
-                                             (url-link x))
-                             (url-link x)
-                             (format #f "https://~a"
-                                     (url-link x)))))
-                (else (throw "unknown data type for bookmark" x)))) xs)
-  (newline))
+  (with-output-to-string (lambda ()
+                           (for-each (lambda (x)
+                                       (cond
+                                         ((dir-record? x)
+                                          (format #t "\n\n~a[ ~a ]"
+                                                  (make-string indent #\space)
+                                                  (dir-name x))
+                                          (cli-bookmark-renderer (dir-items x)
+                                                                 #:indent (+ 4
+                                                                           indent))
+                                          (newline))
+                                         ((url-record? x)
+                                          (format #t
+                                                  "\n~aurl: ~a~a~a | ~a"
+                                                  (make-string indent #\space)
+                                                  (url-name x)
+                                                  (if (url-added x)
+                                                      (format #f " added: ~a "
+                                                              (url-added x))
+                                                      "")
+                                                  (if (url-tags x)
+                                                      (format #f " tags: ~a "
+                                                              (url-tags x)) "")
+                                                  (if (string-prefix? "http"
+                                                                      (url-link
+                                                                       x))
+                                                      (url-link x)
+                                                      (format #f "https://~a"
+                                                              (url-link x)))))
+                                         (else (throw
+                                                "unknown data type for bookmark"
+                                                x)))) xs)
+                           (newline))))
