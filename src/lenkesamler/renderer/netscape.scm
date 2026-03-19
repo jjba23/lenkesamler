@@ -36,7 +36,7 @@
   #:use-module (ice-9 iconv)
   #:use-module (lenkesamler prelude)
   #:use-module (ice-9 threads)
-  #:export (netscape-bookmark-logger))
+  #:export (netscape-bookmark-renderer))
 
 (define (dir-to-html x)
   `("\n<DT>" (H3 ,(dir-name x))
@@ -60,7 +60,7 @@
      (url-to-html x))
     (else (throw "unknown data type for bookmark" x))))
 
-(define* (netscape-bookmark-logger xs)
+(define* (netscape-bookmark-renderer xs)
   (let* ((parsed-nodes (map parse-lenksamler-to-html xs))
          (tree `("<!DOCTYPE NETSCAPE-Bookmark-file-1>" (META (@ (http-equiv
                                                                  Content-Type)
