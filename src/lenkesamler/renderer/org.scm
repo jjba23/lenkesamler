@@ -38,7 +38,7 @@
                  (format #t "\n\n~a ~a"
                          (make-string indent #\*)
                          (dir-name x))
-                 (org-bookmark-renderer (dir-urls x)
+                 (org-bookmark-renderer (dir-items x)
                                         #:indent (+ 1 indent))
                  (newline))
                 ((url-record? x)

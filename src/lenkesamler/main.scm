@@ -19,8 +19,9 @@
   #:declarative? #f
   #:use-module (ice-9 getopt-long)
   #:use-module (lenkesamler renderer cli)
-  #:use-module (lenkesamler renderer org)  
+  #:use-module (lenkesamler renderer org)
   #:use-module (lenkesamler renderer netscape)
+  #:use-module (lenkesamler renderer json)
   #:use-module (lenkesamler prelude)
   #:use-module (lenkesamler html)
   #:export (main))
@@ -38,8 +39,7 @@
                               (required? #t))))
          (options (getopt-long args option-spec))
          (mode (string->symbol (option-ref options
-                                           'mode
-                                           "netscape")))
+                                           'mode "netscape")))
          (file (option-ref options
                            'file #f))
          (destination (option-ref options
@@ -65,7 +65,10 @@ Lenkesamler: Your bookmark manager and sync tool powered by Lisp
          (cli-bookmark-renderer user-bookmarks))
         ((eq? mode
               'org)
-         (org-bookmark-renderer user-bookmarks))        
+         (org-bookmark-renderer user-bookmarks))
+        ((eq? mode
+              'json)
+         (json-bookmark-renderer user-bookmarks))
         ((eq? mode
               'netscape)
          (display (with-output-to-string (lambda ()

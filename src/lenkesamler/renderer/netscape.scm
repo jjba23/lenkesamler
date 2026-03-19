@@ -42,7 +42,7 @@
   `("\n<DT>" (H3 ,(dir-name x))
     (DL "<P>"
         ,@(map parse-lenksamler-to-html
-               (dir-urls x)) "<P>")))
+               (dir-items x)) "<P>")))
 
 (define (url-to-html x)
   `("\n<DT>" (A (@ (HREF ,(if (string-prefix? "http"

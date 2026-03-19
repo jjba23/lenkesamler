@@ -37,7 +37,7 @@
                         url
                         dir-record?
                         dir-name
-                        dir-urls
+                        dir-items
                         make-url
                         url-record?
                         url-name
@@ -52,7 +52,7 @@
 (define-record-type dir-record
   (make-dir name urls) dir-record?
   (name dir-name)
-  (urls dir-urls))
+  (urls dir-items))
 
 (define* (dir name . urls)
   (make-dir name urls))

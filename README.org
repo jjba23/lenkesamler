@@ -19,7 +19,7 @@ Then it can translate between this "central bookmark definition" into many other
 
 See an example of bookmark file here: [[file:bookmarks/joe.scm]]
 
-Supported modes: ~cli~, ~netscape~, ~org~
+Supported modes: ~cli~, ~netscape~, ~org~, ~json~
 
 The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite nesting and extensibility.
 
