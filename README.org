@@ -32,7 +32,7 @@ You shouldn't be locked into one tool or browser. Lenkesamler is built with a "n
 
 ** About Lisp, the DSL, the Prelude and 
 
-Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using a full and flexible rogramming language: Lisp (Guile Scheme).
+Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using a full and flexible programming language: Lisp (Guile Scheme).
 
 Why Lisp? Because it provides infinite power. You aren't just writing a list; you're writing a program. This means you have recursive nesting, macros, and endless extensibility out of the box.
 
