@@ -70,5 +70,5 @@
                  (H1 "Bookmarks")
                  "\n<DL><P>"
                  ,@parsed-nodes
-                 "\n</DL><P>")))
+                 "\n</DL><P>\n")))
     tree))
