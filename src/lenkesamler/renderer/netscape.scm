@@ -45,11 +45,13 @@
                (dir-urls x)) "<P>")))
 
 (define (url-to-html x)
-  `("\n<DT>" (A (@ (href ,(if (string-prefix? "http"
+  `("\n<DT>" (A (@ (HREF ,(if (string-prefix? "http"
                                               (url-link x))
                               (url-link x)
                               (format #f "https://~a"
-                                      (url-link x)))))
+                                      (url-link x))))
+                   (ADD_DATE ,(if (url-added x)
+                                  (ymd-date-to-epoch (url-added x)) "")))
                 ,(url-name x))))
 
 (define (parse-lenksamler-to-html x)

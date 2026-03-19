@@ -20,6 +20,7 @@
   #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-9)
   #:use-module (srfi srfi-13)
+  #:use-module (srfi srfi-19)
   #:use-module (ice-9 string-fun)
   #:use-module (ice-9 format)
   #:use-module (ice-9 match)
@@ -28,6 +29,7 @@
   #:use-module (ice-9 textual-ports)
   #:use-module (ice-9 regex)
   #:export (get-setting ~
+                        ymd-date-to-epoch
                         url-record
                         dir-record
                         make-dir
@@ -39,6 +41,7 @@
                         make-url
                         url-record?
                         url-name
+                        url-added
                         url-link))
 
 (define* (~ #:rest args)
@@ -54,17 +57,24 @@
   (make-dir name urls))
 
 (define-record-type url-record
-  (make-url link name) url-record?
+  (make-url link name added) url-record?
   (link url-link)
-  (name url-name))
+  (name url-name)
+  (added url-added))
 
 (define* (url link
-              #:key (name #f))
+              #:key (name #f)
+              (added #f))
   (make-url link
-            (if (not name) link name)))
+            (if (not name) link name) added))
 
 (define-syntax-rule (get-setting setting)
   "Get a setting for lenkesamler."
   (let* ((user-setting (module-variable (resolve-module '(lenkesamler
                                                           bookmarks)) setting)))
     (variable-ref user-setting)))
+
+(define (ymd-date-to-epoch date)
+  (let* ((parsed (string->date date "~Y-~m-~d"))
+         (time (date->time-utc parsed)))
+    (time-second time)))

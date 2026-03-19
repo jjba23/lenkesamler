@@ -85,7 +85,8 @@
         social-dir
         torrents-dir
         (url "codeberg.org/jjba23"
-             #:name "Codeberg")))
+             #:name "Codeberg"
+             #:added "2025-01-22")))
 
 (define lenkesamler-bookmarks
   joe-bookmarks)

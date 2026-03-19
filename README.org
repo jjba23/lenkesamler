@@ -25,7 +25,8 @@ The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Sc
 (define work-dir
         (dir "Work" work-documents-dir
              (url "app.slack.com/client/T2WXNW2SF5/C08UHE7KM99"
-                  #:name "Slack")
+                  #:name "Slack"
+                  #:added "2025-04-12")
              (dir "Ops P"
                   (url "grafana.prod-backend.nl"
                        #:name "Grafana"))
