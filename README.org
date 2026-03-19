@@ -27,13 +27,10 @@ Browsers come and go. Syncing services shut down, change their pricing, or pivot
 
 You shouldn't be locked into one tool or browser. Lenkesamler is built with a "next 50-years mindset."
 
-By treating your bookmarks as pure, programmable data rather than a hidden database inside a specific browser, you guarantee that *your knowledge base will outlive the software used to view them*.
-
-Define your bookmarks once in a central file, and let Lenkesamler translate them into whatever format you need today, or whatever format gets invented tomorrow.
 
 --------------
 
-** The lenkesamler DSL
+** About Lisp, the DSL, the Prelude and 
 
 Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using an incredibly expressive and powerful Domain Specific Language (DSL) based on the world's most flexible programming language: Lisp (Guile Scheme).
 
@@ -43,7 +40,19 @@ Need to generate bookmarks from an API? Write a function. Need to output to a we
 
 The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite power, recursive nesting and endless extensibility.
 
+To write your own bookmarks, write some file: ~bookmarks.scm~ with your bookmark /program/
+
+lenkesamler will scan for a variable of type list, with the name of ~lenkesamler-bookmarks~ to load bookmarks from
+
+keywords of the DSL:
+- ~dir~
+- ~url~
+
 #+begin_src scheme
+(define-module (lenkesamler bookmarks)
+  #:declarative? #t
+  #:use-module (lenkesamler prelude))
+
 (define work-dir
         (dir "Work" work-documents-dir
              (url "app.slack.com/client/T2WXNW2SF5/C08UHE7KM99"
@@ -64,6 +73,8 @@ The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Sc
 #+end_src
 
 -------------
+
+[[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]
 
 Supported modes:
 - ~cli~
@@ -214,7 +225,8 @@ The modern standard for data exchange. Browsers like Chromium store bookmarks in
 }
 #+end_src
 
----------------
+
+-------------
 
 * Licensing
 
@@ -262,3 +274,11 @@ SQLite - Browsers like Firefox (places.sqlite) and Safari use SQLite databases, 
 *** Import function
 
 What if a user wants to migrate to Lenkesamler? We should write a parser that takes a messy bookmarks.html file and spits out clean Guile Scheme (dir ... (url ...)) code and it would drastically lower the barrier to entry for new users.
+
+---------------
+
+* Closing thoughts
+
+By treating your bookmarks as pure, programmable data rather than a hidden database inside a specific browser, you guarantee that *your knowledge base will outlive the software used to view them*.
+
+Define your bookmarks once in a central file, and let Lenkesamler translate them into whatever format you need today, or whatever format gets invented tomorrow.
