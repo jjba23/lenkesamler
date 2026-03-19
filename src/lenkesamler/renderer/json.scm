@@ -54,8 +54,10 @@
           (url-name x))
     (added unquote
            (url-added x))
-    (tags unquote
-          (url-tags x))))
+    ,@(if (url-tags x)
+          `((tags unquote
+                  (list->vector (url-tags x))))
+          '())))
 
 (define (parse-lenksamler-to-json x)
   (cond
