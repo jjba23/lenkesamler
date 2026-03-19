@@ -27,6 +27,7 @@
   #:use-module (ice-9 popen)
   #:use-module (ice-9 textual-ports)
   #:use-module (ice-9 regex)
+  #:use-module (lenkesamler prelude)
   #:export (cli-bookmark-logger))
 
 (define* (cli-bookmark-logger xs
@@ -37,7 +38,7 @@
                  (format #t "\n\n~a[ ~a ]"
                          (make-string indent #\space)
                          (dir-name x))
-                 (simple-bookmark-logger (dir-urls x)
+                 (cli-bookmark-logger (dir-urls x)
                                          #:indent (+ 4 indent))
                  (newline))
                 ((url-record? x)

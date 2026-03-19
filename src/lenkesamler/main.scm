@@ -21,7 +21,7 @@
   #:use-module (lenkesamler renderer cli)
   #:use-module (lenkesamler renderer netscape)
   #:use-module (lenkesamler prelude)
-  #:use-module (lenkesamler netscape)
+  #:use-module (lenkesamler html)
   #:export (main))
 
 (define* (main #:key (args (command-line)))
