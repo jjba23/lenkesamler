@@ -19,7 +19,7 @@
   #:declarative? #f
   #:use-module (ice-9 getopt-long)
   #:use-module (lenkesamler renderer cli)
-  #:use-module (lenkesamler renderer html)
+  #:use-module (lenkesamler renderer netscape)
   #:use-module (lenkesamler prelude)
   #:use-module (lenkesamler netscape)
   #:export (main))
