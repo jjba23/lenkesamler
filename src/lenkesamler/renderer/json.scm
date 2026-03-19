@@ -28,6 +28,7 @@
   #:use-module (sxml ssax input-parse)
   #:use-module (sxml ssax)
   #:use-module (sxml transform)
+  #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-13)
   #:use-module (ice-9 popen)
   #:use-module (ice-9 textual-ports)
@@ -66,5 +67,8 @@
 
 (define* (json-bookmark-renderer xs)
   (let* ((parsed (map parse-lenksamler-to-json xs))
-         (_ (write parsed)))
-    (scm->json-string parsed)))
+         (_ (write parsed))
+         (serialized (scm->json-string parsed))
+         (_ (newline))
+         (_ (display serialized)))
+    serialized))

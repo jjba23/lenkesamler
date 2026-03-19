@@ -89,7 +89,9 @@
         (url "codeberg.org/jjba23"
              #:name "Codeberg"
              #:added "2025-01-22"
-             #:tags '(dev))))
+             #:tags '(dev))
+        ))
 
 (define lenkesamler-bookmarks
   joe-bookmarks)
+
