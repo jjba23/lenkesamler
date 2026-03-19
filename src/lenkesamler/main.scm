@@ -18,8 +18,8 @@
 (define-module (lenkesamler main)
   #:declarative? #f
   #:use-module (ice-9 getopt-long)
-  #:use-module (lenkesamler cli)
-  #:use-module (lenkesamler html)
+  #:use-module (lenkesamler renderer cli)
+  #:use-module (lenkesamler renderer html)
   #:use-module (lenkesamler prelude)
   #:use-module (lenkesamler netscape)
   #:export (main))

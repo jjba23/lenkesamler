@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with lenkesamler. If not, see <https://www.gnu.org/licenses/>.
 
-(define-module (lenkesamler netscape)
+(define-module (lenkesamler renderer netscape)
   #:declarative? #t
   #:use-module (web server)
   #:use-module (web request)

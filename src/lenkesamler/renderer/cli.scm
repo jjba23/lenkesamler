@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with lenkesamler. If not, see <https://www.gnu.org/licenses/>.
 
-(define-module (lenkesamler cli)
+(define-module (lenkesamler renderer cli)
   #:declarative? #t
   #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-9)
