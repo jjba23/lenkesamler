@@ -126,6 +126,76 @@ The format uses basic HTML tags to organize links and folder hierarchies:
 
 ----------------
 
+** JSON format
+
+#+begin_src json
+{
+  "bookmarks": [
+    {
+      "name": "Work",
+      "items": [
+        {
+          "name": "Documents",
+          "items": [
+            {
+              "link": "vandebron.atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards",
+              "name": "🌐 REST standards",
+              "added": false,
+              "tags": [
+                "work"
+              ]
+            }
+          ]
+        },
+        {
+          "link": "app.slack.com/client/T1XNW2SF5/C08UHE7KM99",
+          "name": "Slack",
+          "added": false
+        },
+        {
+          "name": "Ops T",
+          "items": [
+            {
+              "link": "grafana.test-backend.nl",
+              "name": "Grafana",
+              "added": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Emacs",
+      "items": [
+        {
+          "link": "protesilaos.com/codelog/2024-09-10-emacs-show-font-0-1-0",
+          "name": "show-font",
+          "added": false
+        },
+        {
+          "link": "www.gnu.org/software/emacs/manual/html_mono/calc.html",
+          "name": "Calc Manual",
+          "added": false,
+          "tags": [
+            "calc"
+          ]
+        }
+      ]
+    },
+    {
+      "link": "codeberg.org/jjba23",
+      "name": "Codeberg",
+      "added": "2025-01-22",
+      "tags": [
+        "dev"
+      ]
+    }
+  ]
+}
+#+end_src
+
+---------------
+
 * Licensing
 
 lenkesamler and all of its source code are free software, licensed under the GNU Affero General Public License v3 (or newer at your convenience).
