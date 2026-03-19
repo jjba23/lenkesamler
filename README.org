@@ -34,7 +34,7 @@ You shouldn't be locked into one tool or browser. Lenkesamler is built with a "n
 
 Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using a full and flexible programming language: Lisp (Guile Scheme).
 
-Why Lisp? Because it provides infinite power. You aren't just writing a list; you're writing a program. This means you have recursive nesting, macros, and endless extensibility out of the box.
+Why Lisp? Because it provides infinite power. You aren't just writing a list; you're writing a program. This means you have functions, calculations, API calls, recursive nesting, macros, and endless extensibility out of the box.
 
 To write your own bookmarks simply write some Guile Scheme code as shown below in a called file: ~bookmarks.scm~  or ~whatever.scm~ with your bookmark /program/
 
@@ -70,6 +70,8 @@ keywords of the DSL:
 
 #+end_src
 
+ Also modularizing your bookmarks becomes trivial as you can even split into multiple files and ~(load "my-other-bookmarks.scm")~
+ 
 -------------
 
 Need to generate bookmarks from an API? Write a function. Need to output to a weird, undocumented (or god forbid proprietary) format 10 years from now? Write a custom exporter in a few lines of Lisp.
