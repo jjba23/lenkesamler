@@ -39,6 +39,7 @@
 
 (packages->manifest (list maak
                           guile-3.0-latest
+                          guile-json-4
                           watchexec
                           texinfo
                           guile-documenta

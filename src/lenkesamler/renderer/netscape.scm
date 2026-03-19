@@ -50,8 +50,9 @@
                               (url-link x)
                               (format #f "https://~a"
                                       (url-link x))))
-                   (ADD_DATE ,(if (url-added x)
-                                  (ymd-date-to-epoch (url-added x)) "")))
+                   ,@(if (url-added x)
+                         `((ADD_DATE ,(ymd-date-to-epoch (url-added x))))
+                         '()))
                 ,(url-name x))))
 
 (define (parse-lenksamler-to-html x)
