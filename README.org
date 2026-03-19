@@ -19,6 +19,35 @@ Then it can translate between this "central bookmark definition" into many other
 
 Supported modes: ~cli~, ~netscape~
 
+The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite nesting and extensibility.
+
+#+begin_src scheme
+(define work-dir
+        (dir "Work" work-documents-dir
+             (url "app.slack.com/client/T2WXNW2SF5/C08UHE7KM99"
+                  #:name "Slack")
+             (dir "Ops P"
+                  (url "grafana.prod-backend.nl"
+                       #:name "Grafana"))
+             (dir "Ops T"
+                  (url "grafana.test-backend.nl"
+                       #:name "Grafana"))))
+
+(define social-dir
+        (dir "Social"
+             (url "web.whatsapp.com"
+                  #:name "WhatsApp")
+             (url "mastodon.social"
+                  #:name "Mastodon")))
+
+(define lenkesamler-bookmarks
+        (list work-dir
+              social-dir
+              (url "codeberg.org/jjba23"
+                   #:name "Codeberg")))
+
+#+end_src
+
 --------------
 
 ** CLI Format
