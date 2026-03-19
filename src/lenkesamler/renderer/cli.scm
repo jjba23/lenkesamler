@@ -31,7 +31,7 @@
   #:export (cli-bookmark-renderer))
 
 (define* (cli-bookmark-renderer xs
-                     #:key (indent 0))
+                                #:key (indent 0))
   (for-each (lambda (x)
               (cond
                 ((dir-record? x)
@@ -39,12 +39,19 @@
                          (make-string indent #\space)
                          (dir-name x))
                  (cli-bookmark-renderer (dir-urls x)
-                                         #:indent (+ 4 indent))
+                                        #:indent (+ 4 indent))
                  (newline))
                 ((url-record? x)
-                 (format #t "\n~aurl: ~a | ~a"
+                 (format #t
+                         "\n~aurl: ~a~a~a | ~a"
                          (make-string indent #\space)
                          (url-name x)
+                         (if (url-added x)
+                             (format #f " added: ~a "
+                                     (url-added x)) "")
+                         (if (url-tags x)
+                             (format #f " tags: ~a "
+                                     (url-tags x)) "")
                          (if (string-prefix? "http"
                                              (url-link x))
                              (url-link x)

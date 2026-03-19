@@ -42,6 +42,7 @@
                         url-record?
                         url-name
                         url-added
+                        url-tags
                         url-link))
 
 (define* (~ #:rest args)
@@ -57,16 +58,19 @@
   (make-dir name urls))
 
 (define-record-type url-record
-  (make-url link name added) url-record?
+  (make-url link name added tags)
+  url-record?
   (link url-link)
   (name url-name)
-  (added url-added))
+  (added url-added)
+  (tags url-tags))
 
 (define* (url link
               #:key (name #f)
-              (added #f))
+              (added #f)
+              (tags #f))
   (make-url link
-            (if (not name) link name) added))
+            (if (not name) link name) added tags))
 
 (define-syntax-rule (get-setting setting)
   "Get a setting for lenkesamler."

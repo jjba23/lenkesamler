@@ -24,7 +24,8 @@
        (url "protesilaos.com/codelog/2024-09-10-emacs-show-font-0-1-0"
             #:name "show-font")
        (url "www.gnu.org/software/emacs/manual/html_mono/calc.html"
-            #:name "Calc Manual")))
+            #:name "Calc Manual"
+            #:tags '(calc))))
 
 (define dev-dir
   (dir "Dev"
@@ -57,7 +58,8 @@
   (dir "Documents"
        (url
         "vandebron.atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards"
-        #:name "🌐 REST standards")))
+        #:name "🌐 REST standards"
+        #:tags '(work))))
 
 (define work-dir
   (dir "Work" work-documents-dir
@@ -86,7 +88,8 @@
         torrents-dir
         (url "codeberg.org/jjba23"
              #:name "Codeberg"
-             #:added "2025-01-22")))
+             #:added "2025-01-22"
+             #:tags '(dev))))
 
 (define lenkesamler-bookmarks
   joe-bookmarks)

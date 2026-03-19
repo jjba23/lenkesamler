@@ -17,6 +17,8 @@ Lenkesamler lets you define your bookmarks in an extremely expressive and powerf
 
 Then it can translate between this "central bookmark definition" into many other formats and outputs, including browser bookmarks (to import in Firefox, Chromium, etc.), CLI output, Org mode document and more.
 
+See an example of bookmark file here: [[file:bookmarks/joe.scm]]
+
 Supported modes: ~cli~, ~netscape~, ~org~
 
 The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite nesting and extensibility.
