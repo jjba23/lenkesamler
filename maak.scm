@@ -66,12 +66,7 @@
   (mv "./index" "./doc/api-dist"))
 
 (define (deploy)
-  (run-joe-en)
   (docs)
-  ;; Deploy Iter Vitae
-  (delete-file-recursively (~ "~a/joe-cv" deploy-dir))
-  (mv "dist"
-      (~ "~a/joe-cv" deploy-dir))
   ;; Deploy API docs
   (remkdir-p (~ "~a/api-docs/~a" deploy-dir project-name))
   (mv "doc/api-dist/*"
@@ -85,19 +80,20 @@
                                  "-S /bin=bin"
                                  "bash coreutils util-linux-with-udev guile")))
 
-(define (dev-run* persona)
+(define (dev-run* bookmarks-file)
   (time-machine-manifest-shell (list
                                 "guile -L ./src -c '((@(lenkesamler main) main))'"
                                 (~
                                  "--file /home/joe/Hacking/lenkesamler/bookmarks/~a.scm"
-                                 persona) "--destination ./dist"
+                                 bookmarks-file) "--destination ./bookmarks-export.html"
                                 "--resources ./resources")
                                #:verbose? #t))
 
-(define (run* persona)
+(define (run* bookmarks-file)
   (time-machine-program-shell (list (~ "lenkesamler --file ./bookmarks/~a.scm"
-                                       persona) "--destination ./dist"
-                                    )))
+                                       bookmarks-file) "--destination ./bookmarks-export.html"
+                                    )
+                              #:verbose? #t))
 
 (define (run)
   "Run lenkesamler."

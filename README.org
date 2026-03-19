@@ -8,8 +8,6 @@
 
 Lenkesamler - your bookmark manager and sync tool
 
-🚧 Work in Progress
-
 If you like my work, please support me by [[https://bmc.link/jjbigorra][buying me a cup of coffee ☕]] so I can continue with a lot of motivation.
 
 ---------------
@@ -17,6 +15,10 @@ If you like my work, please support me by [[https://bmc.link/jjbigorra][buying m
 Lenkesamler lets you define your bookmarks in an extremely expressive and powerful way, using the world's most flexible programming language, Lisp (Guile Scheme)
 
 Then it can translate between this "central bookmark definition" into many other formats and outputs, including browser bookmarks (to import in Firefox, Chromium, etc.), CLI output, and more.
+
+Supported modes: ~cli~, ~netscape~
+
+--------------
 
 ** CLI Format
 

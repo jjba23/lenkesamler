@@ -20,11 +20,11 @@
 # Commentary:
 #
 # This bash script provides a convenient and user-friendly wrapper
-# around the command-line usage of `iter-vitae`, allowing the
+# around the command-line usage of `lenkesamler`, allowing the
 # Guile Scheme application to behave and feel like any other
 # executable or binary that users may install to their systems.
 #
-# This also helps installing `iter-vitae` in a convenient fashion
+# This also helps installing `lenkesamler` in a convenient fashion
 # to the Guix store and it allows us to decouple the user-facing
 # command-line interface from the internal Guile Scheme arguments
 # to the main program and library.
@@ -48,12 +48,12 @@ show_help() {
   cat "${resources_dir}/help.txt"
 }
 
-parsed_options=$(getopt -n "iter-vitae" -o l:d:f:r:h \
-  --long locale:,destination:,file:,resources:,help -- "$@")
+parsed_options=$(getopt -n "lenkesamler" -o m:d:f:r:h \
+  --long mode:,destination:,file:,resources:,help -- "$@")
 
 eval set -- "${parsed_options}"
 
-locale_arg=""
+mode_arg=""
 destination_arg=""
 file_arg=""
 resources_arg="${resources_dir}"
@@ -65,9 +65,9 @@ guile_cmd_args=(
 
 while true; do
   case "${1}" in
-  -l | --locale)
-    locale_arg="${2}"
-    [[ -n "${locale_arg}" ]] && guile_cmd_args+=("--locale" "${locale_arg}")
+  -m | --mode)
+    mode_arg="${2}"
+    [[ -n "${mode_arg}" ]] && guile_cmd_args+=("--mode" "${mode_arg}")
     shift 2
     ;;
   -d | --destination)
@@ -106,7 +106,7 @@ done
 # The resources
 guile_cmd_args+=("--resources" "${resources_arg}")
 
-# The Curriculum Vitae file
+# The bookmarks file
 if [[ -z "${file_arg}" ]]; then
   log_error "Error: The file argument is required. Use -f or --file." >&2
   show_help
@@ -114,7 +114,7 @@ if [[ -z "${file_arg}" ]]; then
 fi
 
 log_info "-------------------------------------------------"
-log_info "Starting Iter Vitae: guile ${guile_cmd_args[*]}"
+log_info "Starting Lenkesamler: guile ${guile_cmd_args[*]}"
 
 # Run Guile application
 exec guile "${guile_cmd_args[@]}"

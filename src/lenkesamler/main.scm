@@ -24,12 +24,8 @@
 
 (define* (main #:key (args (command-line)))
   
-  (let* ((_ (begin
-              (newline)
-              (write args)
-              (newline)))
-         (option-spec '((locale (single-char #\l)
-                                (value #t))
+  (let* ((option-spec '((mode (single-char #\m)
+                              (value #t))
                         (destination (single-char #\o)
                                      (value #t))
                         (resources (single-char #\r)
@@ -37,30 +33,33 @@
                         (file (single-char #\p)
                               (value #t)
                               (required? #t))))
-
          (options (getopt-long args option-spec))
+         (mode (string->symbol (option-ref options
+                                           'mode
+                                           'netscape)))
          (file (option-ref options
                            'file #f))
          (destination (option-ref options
-                                  'destination "./dist"))
+                                  'destination "./bookmarks-export.html"))
          (resources (option-ref options
-                                'resources #f))
-         ;; (locale (option-ref options
-         ;; 'locale "en"))
-         )
-    (display "
+                                'resources #f)))
+    (display (format #f
+              "
 ---------------------------------------------------------
-")
-    (display "Lenkesamler")
-    (display (format #f "\n  loading file: ~a" file))
-    (display "
+Lenkesamler: Your bookmark manager and sync tool powered by Lisp
+    loading file: ~a
+    output mode: ~a
 ---------------------------------------------------------
-")
+"
+              file mode))
     (load file)
-    (simple-bookmark-logger (get-setting 'lenkesamler-bookmarks))
-    (newline)
-    (newline)
-    (display (with-output-to-string (lambda ()
-                                      (sxml->xml (html-bookmark-logger (get-setting 'lenkesamler-bookmarks))))))
-
-    ))
+    (cond
+      ((eq? mode
+            'cli)
+       (simple-bookmark-logger (get-setting 'lenkesamler-bookmarks)))
+      ((eq? mode
+            'netscape)
+       (display (with-output-to-string (lambda ()
+                                         (sxml->xml (html-bookmark-logger (get-setting 'lenkesamler-bookmarks)))))))
+      (else (throw "unknown mode specified" mode)))
+    (newline)))
