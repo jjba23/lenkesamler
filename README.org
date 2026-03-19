@@ -58,13 +58,13 @@ The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Sc
     url: WikiMusic | https://wikimusic.jointhefreeworld.org
 
 [ Work ]
-    url: Slack | https://app.slack.com/client/T1XNW2SF5/C08UHE7KM99
+    url: Slack | https://app.slack.com/client/ET1XNW2SF5/C08UHE7KM99
 
     [ Ops P ]
-        url: Grafana | https://grafana.prod-backend.vdbinfra.nl
+        url: Grafana | https://grafana.prod-backend.nl
 
     [ Ops T ]
-        url: Grafana | https://grafana.test-backend.vdbinfra.nl
+        url: Grafana | https://grafana.test-backend.nl
 
 url: WhatsApp | https://web.whatsapp.com/
 url: Mastodon | https://mastodon.social
