@@ -21,7 +21,11 @@ See an example of bookmark file here: [[file:bookmarks/joe.scm]]
 
 Supported modes: ~cli~, ~netscape~, ~org~, ~json~
 
-The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite nesting and extensibility.
+--------------
+
+** The lenkesamler DSL
+
+The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite power, recursive nesting and endless extensibility.
 
 #+begin_src scheme
 (define work-dir
@@ -54,6 +58,8 @@ The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Sc
 --------------
 
 ** CLI Format
+
+A simple way to visualize a bookmarks file, right from your terminal.
 
 #+begin_example
 [ jointhefreeworld ]
@@ -108,6 +114,8 @@ The format uses basic HTML tags to organize links and folder hierarchies:
 
 ** Org mode format
 
+A killer-feature for anyone that uses this amazing Emacs mode. Easily write your bookmarks in the expressive Lisp language, and have automatically generated pretty Org mode documents made.
+
 #+begin_example
 * jointhefreeworld
 - [[https://jointhefreeworld.org][jointhefreeworld.org]]
@@ -127,6 +135,8 @@ The format uses basic HTML tags to organize links and folder hierarchies:
 ----------------
 
 ** JSON format
+
+The modern standard for data exchange. Browsers like Chromium store bookmarks internally as JSON. High Priority. Essential for programmatic use, API integrations, or piping Lenkesamler output into other CLI tools like jq.
 
 #+begin_src json
 {
@@ -221,21 +231,11 @@ In summary, we foster an inclusive, respectful, and cooperative environment for 
 
 * TODO
 
-*** Expand the DSL Metadata
-
-Tags: ~#:tags '(linux lisp devops)~. This allows for cross-referencing outside of rigid directory structures.
-
-Descriptions/Notes: ~#:desc "Useful tutorial for Guix"~. Helpful for exporting to Markdown/Org-mode.
-
-Creation Dates: ~#:added "2023-10-25"~. (Useful for mapping to the =ADD_DATE= Unix timestamps in the Netscape format).
-
 *** Link Validation (Dead Link Checker)
 
 Add a command like lenkesamler check that iterates through the DSL, pings every URL, and flags HTTP 404s, 500s, or redirects.
 
 *** Formats that will futurely be supported
-
-JSON - The modern standard for data exchange. Browsers like Chromium store bookmarks internally as JSON. High Priority. Essential for programmatic use, API integrations, or piping Lenkesamler output into other CLI tools like jq.
 
 HTML - The Netscape format seriously deviates from correct HTML. It could be useful to have a simple and a prettified (w/ CSS) valid HTML exporters.
 
