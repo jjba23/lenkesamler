@@ -41,21 +41,21 @@
   #:export (json-bookmark-renderer))
 
 (define (serialize-dir x)
-  `(("name" unquote
+  `((name unquote
           (dir-name x))
-    ("items" unquote
+    (items unquote
            (list->vector (map parse-lenksamler-to-json
                               (dir-items x))))))
 
 (define (serialize-url x)
-  `(("link" unquote
+  `((link unquote
           (url-link x))
-    ("name" unquote
+    (name unquote
           (url-name x))
-    ("added" unquote
+    (added unquote
            (url-added x))
     ,@(if (url-tags x)
-          `(("tags" unquote
+          `((tags unquote
                   (list->vector (map symbol->string (url-tags x)))))
           '())))
 
@@ -69,5 +69,5 @@
 
 (define* (json-bookmark-renderer xs)
   (let* ((parsed (map parse-lenksamler-to-json xs))
-         (serialized (scm->json-string (list->vector parsed))))
+         (serialized (scm->json-string `((bookmarks unquote (list->vector parsed))))))
     serialized))
