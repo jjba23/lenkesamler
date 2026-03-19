@@ -65,6 +65,6 @@ Lenkesamler: Your bookmark manager and sync tool powered by Lisp
         ((eq? mode
               'netscape)
          (display (with-output-to-string (lambda ()
-                                           (sxml->xml (netscape-bookmark-logger
+                                           (sxml->xml (netscape-bookmark-renderer
                                                        user-bookmarks))))))
         (else (throw "unknown mode specified" mode))))))
