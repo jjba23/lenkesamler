@@ -156,3 +156,6 @@ OS Shortcuts .desktop (Linux), .url (Windows), .webloc (macOS) - We could have a
 
 SQLite - Browsers like Firefox (places.sqlite) and Safari use SQLite databases, worth investigating, and perhaps generating some ~INSERT~ statements.
 
+*** Import function
+
+What if a user wants to migrate to Lenkesamler? We should write a parser that takes a messy bookmarks.html file and spits out clean Guile Scheme (dir ... (url ...)) code and it would drastically lower the barrier to entry for new users.
