@@ -31,23 +31,23 @@
   #:export (org-bookmark-renderer))
 
 (define* (org-bookmark-renderer xs
-                     #:key (indent 1))
+                                #:key (indent 1))
   (for-each (lambda (x)
               (cond
                 ((dir-record? x)
                  (format #t "\n\n~a ~a"
                          (make-string indent #\*)
                          (dir-name x))
-                 (cli-bookmark-renderer (dir-urls x)
-                                         #:indent (+ 1 indent))
+                 (org-bookmark-renderer (dir-urls x)
+                                        #:indent (+ 1 indent))
                  (newline))
                 ((url-record? x)
                  (format #t "\n- [[~a][~a]]"
-                         (url-name x)
                          (if (string-prefix? "http"
                                              (url-link x))
                              (url-link x)
                              (format #f "https://~a"
-                                     (url-link x)))))
+                                     (url-link x)))
+                         (url-name x)))
                 (else (throw "unknown data type for bookmark" x)))) xs)
   (newline))
