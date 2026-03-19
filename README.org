@@ -7,7 +7,7 @@
 [[https://jointhefreeworld.org/ggg/dist/scheme-guile.svg]] [[https://jointhefreeworld.org/ggg/dist/gnu-guix.svg]]  
 [[https://jointhefreeworld.org/ggg/dist/license-agpl3+.svg]]    [[https://jointhefreeworld.org/ggg/dist/license-fdl13+.svg]] 
 
-Lenkesamler - your bookmark manager and sync tool
+Lenkesamler (Norwegian for "link collector") is your ultimate bookmark manager, syncing tool, and digital archive. Bookmarking for the next 50 years.
 
 If you like my work, please support me by [[https://bmc.link/jjbigorra][buying me a cup of coffee ☕]] so I can continue with a lot of motivation.
 
@@ -21,9 +21,25 @@ See an example of bookmark file here: [[file:bookmarks/joe.scm]]
 
 Supported modes: ~cli~, ~netscape~, ~org~, ~json~
 
+---------------
+
+Browsers come and go. Syncing services shut down, change their pricing, or pivot to new business models. But your curated bookmarks and knowledge? They are your personal library, your second brain, and your map of the web.
+
+You shouldn't be locked into one tool or browser. Lenkesamler is built with a "next 50-years mindset."
+
+By treating your bookmarks as pure, programmable data rather than a hidden database inside a specific browser, you guarantee that *your knowledge base will outlive the software used to view them*.
+
+Define your bookmarks once in a central file, and let Lenkesamler translate them into whatever format you need today, or whatever format gets invented tomorrow.
+
 --------------
 
 ** The lenkesamler DSL
+
+Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using an incredibly expressive and powerful Domain Specific Language (DSL) based on the world's most flexible programming language: Lisp (Guile Scheme).
+
+Why Lisp? Because it provides infinite power. You aren't just writing a list; you're writing a program. This means you have recursive nesting, macros, and endless extensibility out of the box.
+
+Need to generate bookmarks from an API? Write a function. Need to output to a weird, undocumented (or god forbid proprietary) format 10 years from now? Write a custom exporter in a few lines of Lisp.
 
 The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite power, recursive nesting and endless extensibility.
 
@@ -87,6 +103,8 @@ url: Codeberg | https://codeberg.org/jjba23
 The archaic *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks. 
 
 This format is the definition of "legacy" in software. It is built on weird non-compliant, semi-valid HTML from the 1990's.
+
+Lenkesamler writes this messy standard perfectly so your browser doesn't have to guess.
 
 The format uses basic HTML tags to organize links and folder hierarchies:
 
@@ -177,11 +195,6 @@ The modern standard for data exchange. Browsers like Chromium store bookmarks in
     {
       "name": "Emacs",
       "items": [
-        {
-          "link": "protesilaos.com/codelog/2024-09-10-emacs-show-font-0-1-0",
-          "name": "show-font",
-          "added": false
-        },
         {
           "link": "www.gnu.org/software/emacs/manual/html_mono/calc.html",
           "name": "Calc Manual",
