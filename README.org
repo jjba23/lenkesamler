@@ -32,15 +32,11 @@ You shouldn't be locked into one tool or browser. Lenkesamler is built with a "n
 
 ** About Lisp, the DSL, the Prelude and 
 
-Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using an incredibly expressive and powerful Domain Specific Language (DSL) based on the world's most flexible programming language: Lisp (Guile Scheme).
+Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using a full and flexible rogramming language: Lisp (Guile Scheme).
 
 Why Lisp? Because it provides infinite power. You aren't just writing a list; you're writing a program. This means you have recursive nesting, macros, and endless extensibility out of the box.
 
-Need to generate bookmarks from an API? Write a function. Need to output to a weird, undocumented (or god forbid proprietary) format 10 years from now? Write a custom exporter in a few lines of Lisp.
-
-The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite power, recursive nesting and endless extensibility.
-
-To write your own bookmarks, write some file: ~bookmarks.scm~ with your bookmark /program/
+To write your own bookmarks simply write some Guile Scheme code as shown below in a called file: ~bookmarks.scm~  or ~whatever.scm~ with your bookmark /program/
 
 lenkesamler will scan for a variable of type list, with the name of ~lenkesamler-bookmarks~ to load bookmarks from
 
@@ -60,7 +56,9 @@ keywords of the DSL:
                   #:added "2025-04-12")
              (dir "Ops P"
                   (url "grafana.prod-backend.nl"
-                       #:name "Grafana"))
+                       ;; run Scheme code, feel free to
+                       ;; make everything dynamic
+                       #:name (make-string (+ 20 4 5 (- 90 7)) #\k))
              (dir "Ops T"
                   (url "grafana.test-backend.nl"
                        #:name "Grafana"))))
@@ -74,13 +72,19 @@ keywords of the DSL:
 
 -------------
 
-[[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]
+Need to generate bookmarks from an API? Write a function. Need to output to a weird, undocumented (or god forbid proprietary) format 10 years from now? Write a custom exporter in a few lines of Lisp.
 
-Supported modes:
+The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite power, recursive nesting and endless extensibility.
+
+** Operation modes
+
+Supported modes of operation are:
 - ~cli~
 - ~json~
 - ~org~
 - ~netscape~
+
+[[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]  
 
 
 --------------
