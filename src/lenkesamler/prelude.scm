@@ -28,7 +28,6 @@
   #:use-module (ice-9 textual-ports)
   #:use-module (ice-9 regex)
   #:export (get-setting ~
-                        simple-bookmark-logger
                         url-record
                         dir-record
                         make-dir
@@ -69,25 +68,3 @@
   (let* ((user-setting (module-variable (resolve-module '(lenkesamler
                                                           bookmarks)) setting)))
     (variable-ref user-setting)))
-
-(define* (simple-bookmark-logger xs
-                                 #:key (indent 0))
-  (for-each (lambda (x)
-              (cond
-                ((dir-record? x)
-                 (format #t "\n\n~a[ ~a ]"
-                         (make-string indent #\space)
-                         (dir-name x))
-                 (simple-bookmark-logger (dir-urls x)
-                                         #:indent (+ 4 indent))
-                 (newline))
-                ((url-record? x)
-                 (format #t "\n~aurl: ~a | ~a"
-                         (make-string indent #\space)
-                         (url-name x)
-                         (if (string-prefix? "http"
-                                             (url-link x))
-                             (url-link x)
-                             (format #f "https://~a"
-                                     (url-link x)))))
-                (else (throw "unknown data type for bookmark" x)))) xs))

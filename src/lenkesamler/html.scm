@@ -1,4 +1,4 @@
-;;; Iter Vitae 
+;;; Lenkesamler
 
 ;; Copyright © Josep Jesus Bigorra Algaba
 
@@ -36,7 +36,7 @@
   #:use-module (ice-9 iconv)
   #:use-module (lenkesamler prelude)
   #:use-module (ice-9 threads)
-  #:export (html-bookmark-logger sxml->string sxml->xml))
+  #:export (sxml->string sxml->xml))
 
 ;; ====== Serialize (SXML) ======
 
@@ -258,39 +258,3 @@ formatting."
                         (#\& . "&amp;")
                         (#\" . "&quot;"))))
 
-;; ================================
-
-(define (dir-to-html x)
-  `("\n<DT>" (H3 ,(dir-name x))
-    (DL "<P>"
-        ,@(map parse-lenksamler-to-html
-               (dir-urls x)) "<P>")))
-
-(define (url-to-html x)
-  `("\n<DT>" (A (@ (href ,(if (string-prefix? "http"
-                                            (url-link x))
-                            (url-link x)
-                            (format #f "https://~a"
-                                    (url-link x)))))
-              ,(url-name x))))
-
-(define (parse-lenksamler-to-html x)
-  (cond
-    ((dir-record? x)
-     (dir-to-html x))
-    ((url-record? x)
-     (url-to-html x))
-    (else (throw "unknown data type for bookmark" x))))
-
-(define* (html-bookmark-logger xs)
-  (let* ((parsed-nodes (map parse-lenksamler-to-html xs))
-         (tree `("<!DOCTYPE NETSCAPE-Bookmark-file-1>" (META (@ (http-equiv
-                                                                 Content-Type)
-                                                                (content
-                                                                 "text/html; charset=UTF-8")))
-                 (TITLE "Bookmarks")
-                 (H1 "Bookmarks")
-                 "\n<DL><P>"
-                 ,@parsed-nodes
-                 "\n</DL><P>")))
-    tree))

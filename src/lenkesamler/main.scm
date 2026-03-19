@@ -18,8 +18,10 @@
 (define-module (lenkesamler main)
   #:declarative? #f
   #:use-module (ice-9 getopt-long)
-  #:use-module (lenkesamler prelude)
+  #:use-module (lenkesamler cli)
   #:use-module (lenkesamler html)
+  #:use-module (lenkesamler prelude)
+  #:use-module (lenkesamler netscape)
   #:export (main))
 
 (define* (main #:key (args (command-line)))
@@ -36,7 +38,7 @@
          (options (getopt-long args option-spec))
          (mode (string->symbol (option-ref options
                                            'mode
-                                           'netscape)))
+                                           "netscape")))
          (file (option-ref options
                            'file #f))
          (destination (option-ref options
@@ -52,14 +54,17 @@ Lenkesamler: Your bookmark manager and sync tool powered by Lisp
 ---------------------------------------------------------
 "
               file mode))
+    ;; --- Load user bookmarks file ---
     (load file)
-    (cond
-      ((eq? mode
-            'cli)
-       (simple-bookmark-logger (get-setting 'lenkesamler-bookmarks)))
-      ((eq? mode
-            'netscape)
-       (display (with-output-to-string (lambda ()
-                                         (sxml->xml (html-bookmark-logger (get-setting 'lenkesamler-bookmarks)))))))
-      (else (throw "unknown mode specified" mode)))
-    (newline)))
+    ;; --- Render bookmarks ---
+    (let* ((user-bookmarks (get-setting 'lenkesamler-bookmarks)))
+      (cond
+        ((eq? mode
+              'cli)
+         (cli-bookmark-logger user-bookmarks))
+        ((eq? mode
+              'netscape)
+         (display (with-output-to-string (lambda ()
+                                           (sxml->xml (netscape-bookmark-logger
+                                                       user-bookmarks))))))
+        (else (throw "unknown mode specified" mode))))))
