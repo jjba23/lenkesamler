@@ -15,7 +15,7 @@ If you like my work, please support me by [[https://bmc.link/jjbigorra][buying m
 
 Lenkesamler lets you define your bookmarks in an extremely expressive and powerful way, using the world's most flexible programming language, Lisp (Guile Scheme)
 
-Then it can translate between this "central bookmark definition" into many other formats and outputs, including browser bookmarks (to import in Firefox, Chromium, etc.), CLI output, and more.
+Then it can translate between this "central bookmark definition" into many other formats and outputs, including browser bookmarks (to import in Firefox, Chromium, etc.), CLI output, Org mode document and more.
 
 Supported modes: ~cli~, ~netscape~, ~org~
 
@@ -71,6 +71,8 @@ url: Mastodon | https://mastodon.social
 url: Codeberg | https://codeberg.org/jjba23
 #+end_example
 
+---------------
+
 ** Browser Bookmark File Format
 
 The archaic *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks. 
@@ -100,6 +102,26 @@ The format uses basic HTML tags to organize links and folder hierarchies:
 #+end_src
 
 --------------
+
+** Org mode format
+
+#+begin_example
+* jointhefreeworld
+- [[https://jointhefreeworld.org][jointhefreeworld.org]]
+- [[https://wikimusic.jointhefreeworld.org][WikiMusic]]
+
+* Work
+
+- [[https://app.slack.com/client/T1XNW2SF5/C08UHE7KM99][Slack]]
+  
+** Documents
+- [[https://vandebron.atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards][🌐 REST standards]]
+
+* Dev
+- [[https://www.iankduncan.com/engineering/2026-02-09-what-functional-programmers-get-wrong-about-systems/][What functional programmers get wrong about systems]]
+#+end_example
+
+----------------
 
 * Licensing
 
@@ -143,8 +165,6 @@ Add a command like lenkesamler check that iterates through the DSL, pings every 
 JSON - The modern standard for data exchange. Browsers like Chromium store bookmarks internally as JSON. High Priority. Essential for programmatic use, API integrations, or piping Lenkesamler output into other CLI tools like jq.
 
 HTML - The Netscape format seriously deviates from correct HTML. It could be useful to have a simple and a prettified (w/ CSS) valid HTML exporters.
-
-Org-mode - Emacs' powerful outliner and plain-text system. Perfect Match for Emacs users. Outputting to cleanly structured .org files with links would be a killer feature.
 
 Markdown - The universal plain-text format used by modern note-taking apps (Obsidian, Logseq, Notion). Great for users who want to sync their bookmarks into their "Second Brain" or personal knowledge base.
 
