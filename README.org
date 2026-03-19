@@ -13,13 +13,13 @@ If you like my work, please support me by [[https://bmc.link/jjbigorra][buying m
 
 ---------------
 
-Lenkesamler lets you define your bookmarks in an extremely expressive and powerful way, using the world's most flexible programming language, Lisp (Guile Scheme)
+Lenkesamler lets you define your bookmarks in the most extremely expressive, powerful, reliable and eternal way, in code
 
-Then it can translate between this "central bookmark definition" into many other formats and outputs, including browser bookmarks (to import in Firefox, Chromium, etc.), CLI output, Org mode document and more.
+With the world's most flexible programming language, Lisp (Guile Scheme)
 
-See an example of bookmark file here: [[file:bookmarks/joe.scm]]
+Your knowledge base can be translated between this "central bookmark definition" in Lisp (S-expressions, guile records, functions, lambdas, etc), into many other formats and outputs, including browser bookmarks (to import in Firefox, Chromium, etc.), CLI output, Org mode document, JSON and more.
 
-Supported modes: ~cli~, ~netscape~, ~org~, ~json~
+See an example of bookmark file (Lisp) here: [[file:bookmarks/joe.scm]]
 
 ---------------
 
@@ -56,20 +56,21 @@ The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Sc
                   (url "grafana.test-backend.nl"
                        #:name "Grafana"))))
 
-(define social-dir
-        (dir "Social"
-             (url "web.whatsapp.com"
-                  #:name "WhatsApp")
-             (url "mastodon.social"
-                  #:name "Mastodon")))
-
 (define lenkesamler-bookmarks
         (list work-dir
-              social-dir
               (url "codeberg.org/jjba23"
                    #:name "Codeberg")))
 
 #+end_src
+
+-------------
+
+Supported modes:
+- ~cli~
+- ~json~
+- ~org~
+- ~netscape~
+
 
 --------------
 
@@ -85,9 +86,6 @@ A simple way to visualize a bookmarks file, right from your terminal.
 [ Work ]
     url: Slack | https://app.slack.com/client/ET1XNW2SF5/C08UHE7KM99
 
-    [ Ops P ]
-        url: Grafana | https://grafana.prod-backend.nl
-
     [ Ops T ]
         url: Grafana | https://grafana.test-backend.nl
 
@@ -99,6 +97,8 @@ url: Codeberg | https://codeberg.org/jjba23
 ---------------
 
 ** Browser Bookmark File Format
+
+Netscape legacy - most web browsers still use it.
 
 The archaic *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks. 
 
@@ -132,7 +132,9 @@ The format uses basic HTML tags to organize links and folder hierarchies:
 
 ** Org mode format
 
-A killer-feature for anyone that uses this amazing Emacs mode. Easily write your bookmarks in the expressive Lisp language, and have automatically generated pretty Org mode documents made.
+A killer-feature for anyone that uses this amazing Emacs mode 🐂.
+
+With lenkesamler you can easily generate pretty Org mode documents (which further can be converted easily via Emacs as well to PDF, LaTEX, HTML, etc.).
 
 #+begin_example
 * jointhefreeworld
@@ -163,6 +165,14 @@ The modern standard for data exchange. Browsers like Chromium store bookmarks in
       "name": "Work",
       "items": [
         {
+          "link": "codeberg.org/jjba23",
+          "name": "Codeberg",
+          "added": "2025-01-22",
+          "tags": [
+            "dev"
+          ]
+        },
+        {
           "name": "Documents",
           "items": [
             {
@@ -174,11 +184,6 @@ The modern standard for data exchange. Browsers like Chromium store bookmarks in
               ]
             }
           ]
-        },
-        {
-          "link": "app.slack.com/client/T1XNW2SF5/C08UHE7KM99",
-          "name": "Slack",
-          "added": false
         },
         {
           "name": "Ops T",
@@ -203,14 +208,6 @@ The modern standard for data exchange. Browsers like Chromium store bookmarks in
             "calc"
           ]
         }
-      ]
-    },
-    {
-      "link": "codeberg.org/jjba23",
-      "name": "Codeberg",
-      "added": "2025-01-22",
-      "tags": [
-        "dev"
       ]
     }
   ]
