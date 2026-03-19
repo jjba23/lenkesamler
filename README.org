@@ -126,7 +126,19 @@ In summary, we foster an inclusive, respectful, and cooperative environment for 
 
 * TODO
 
-Formats that will futurely be supported:
+*** Expand the DSL Metadata
+
+Tags: ~#:tags '(linux lisp devops)~. This allows for cross-referencing outside of rigid directory structures.
+
+Descriptions/Notes: ~#:desc "Useful tutorial for Guix"~. Helpful for exporting to Markdown/Org-mode.
+
+Creation Dates: ~#:added "2023-10-25"~. (Useful for mapping to the =ADD_DATE= Unix timestamps in the Netscape format).
+
+*** Link Validation (Dead Link Checker)
+
+Add a command like lenkesamler check that iterates through the DSL, pings every URL, and flags HTTP 404s, 500s, or redirects.
+
+*** Formats that will futurely be supported
 
 JSON - The modern standard for data exchange. Browsers like Chromium store bookmarks internally as JSON. High Priority. Essential for programmatic use, API integrations, or piping Lenkesamler output into other CLI tools like jq.
 
@@ -143,3 +155,4 @@ CSV - Comma-Separated Values. Good for basic spreadsheet viewing or importing in
 OS Shortcuts .desktop (Linux), .url (Windows), .webloc (macOS) - We could have a mode that generates a directory tree on the filesystem populated with these shortcut files.
 
 SQLite - Browsers like Firefox (places.sqlite) and Safari use SQLite databases, worth investigating, and perhaps generating some ~INSERT~ statements.
+
