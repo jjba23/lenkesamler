@@ -74,18 +74,13 @@ keywords of the DSL:
 
  You can also easily do dynamic things:
  #+begin_src scheme
- (map (lambda (kv)
-       (dir (format #f "Ops ~a"
-                    (car kv))
-            (url (format #f "grafana.~a-backend.vdbinfra.nl"
-                         (cadr kv))
+(map (lambda (k)
+       (dir (format #f "Ops ~a" k)
+            (url (format #f "grafana.~a-backend.nl" k)
                  #:name "Grafana")
-            (url (format #f "argocd.prod-backend.vdbinfra.nl"
-                         (cadr kv))
+            (url (format #f "argocd.~a-backend.nl" k)
                  #:name "ArgoCD")))
-     '((prod . prod)
-       (acce . acce)
-       (test . test)))
+     '(prod test acce))
  #+end_src
  
 -------------
