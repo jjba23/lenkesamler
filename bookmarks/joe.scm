@@ -84,7 +84,9 @@
                    (url (format #f "grafana.~a-backend.vdbinfra.nl" k)
                         #:name "Grafana")
                    (url (format #f "argocd.~a-backend.vdbinfra.nl" k)
-                        #:name "ArgoCD")))
+                        #:name "ArgoCD")
+                   (url (format #f "docs.~a.vandebron.dev" k)
+                        #:name "API Catalog")))
             '(prod test acce))))
 
 (define social-dir
