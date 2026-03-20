@@ -107,14 +107,14 @@ Supported modes of operation are:
 A simple way to visualize a bookmarks file, right from your terminal.
 
 #+begin_example
-[ jointhefreeworld ]
+[jointhefreeworld]
     url: jointhefreeworld.org | https://jointhefreeworld.org
     url: WikiMusic | https://wikimusic.jointhefreeworld.org
 
-[ Work ]
+[Work]
     url: Slack | https://app.slack.com/client/ET1XNW2SF5/C08UHE7KM99
 
-    [ Ops T ]
+    [Ops T]
         url: Grafana | https://grafana.test-backend.nl
 
 url: WhatsApp | https://web.whatsapp.com/
