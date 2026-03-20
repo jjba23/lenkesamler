@@ -51,6 +51,7 @@
                         ((list? x)
                          (map (lambda (item)
                                 (org-bookmark-renderer item
-                                                       #:indent indent)) (flatten x)))
+                                                       #:indent indent))
+                              (flatten x)))
                         (else (throw "unknown data type for bookmark" x)))) xs)
                ""))

@@ -31,9 +31,9 @@
              (gnu packages linux)
              (gnu packages compression)
              (gnu packages texinfo)
-             (gnu packages rust-apps)             
+             (gnu packages rust-apps)
              (gnu packages autotools)
-             (gnu packages build-tools)             
+             (gnu packages build-tools)
              ((guix licenses)
               #:prefix license:))
 

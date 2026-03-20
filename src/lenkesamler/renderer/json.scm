@@ -54,9 +54,10 @@
           (url-name x))
     (added unquote
            (url-added x))
-    ,@(if (url-tags x)
+    ,@(if (list? (url-tags x))
           `((tags unquote
-                  (list->vector (map symbol->string (url-tags x)))))
+                  (list->vector (map symbol->string
+                                     (url-tags x)))))
           '())))
 
 (define (parse-lenksamler-to-json x)
@@ -66,11 +67,12 @@
     ((url-record? x)
      (serialize-url x))
     ((list? x)
-    (list->vector  (map parse-lenksamler-to-json x)))
+     (list->vector (map parse-lenksamler-to-json x)))
     (else (throw "unknown data type for bookmark" x))))
 
-
 (define* (json-bookmark-renderer xs)
-  (let* ((parsed (map parse-lenksamler-to-json (flatten xs)))
-         (serialized (scm->json-string `((bookmarks unquote (list->vector parsed))))))
+  (let* ((parsed (map parse-lenksamler-to-json
+                      (flatten xs)))
+         (serialized (scm->json-string `((bookmarks unquote
+                                                    (list->vector parsed))))))
     serialized))

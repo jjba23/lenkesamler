@@ -21,6 +21,7 @@ Your knowledge base can be translated between this "central bookmark definition"
 
 See an example of bookmark file (Lisp) here: [[file:bookmarks/joe.scm]]
 
+The project is built primarily with Guix (though you may use the code as you please) and automation is done with [[https://codeberg.org/jjba23/maak][Maak]] , check the ~maak.scm~ file.
 ---------------
 
 Browsers come and go. Syncing services shut down, change their pricing, or pivot to new business models. But your curated bookmarks and knowledge? They are your personal library, your second brain, and your map of the web.
@@ -108,18 +109,18 @@ A simple way to visualize a bookmarks file, right from your terminal.
 
 #+begin_example
 [jointhefreeworld]
-    url: jointhefreeworld.org | https://jointhefreeworld.org
-    url: WikiMusic | https://wikimusic.jointhefreeworld.org
+    jointhefreeworld.org | https://jointhefreeworld.org
+    WikiMusic | https://wikimusic.jointhefreeworld.org
 
 [Work]
-    url: Slack | https://app.slack.com/client/ET1XNW2SF5/C08UHE7KM99
+    Slack | https://app.slack.com/client/ET1XNW2SF5/C08UHE7KM99
 
     [Ops T]
-        url: Grafana | https://grafana.test-backend.nl
+        Grafana | https://grafana.test-backend.nl
 
-url: WhatsApp | https://web.whatsapp.com/
-url: Mastodon | https://mastodon.social
-url: Codeberg | https://codeberg.org/jjba23
+WhatsApp | https://web.whatsapp.com/
+Mastodon | https://mastodon.social
+Codeberg | https://codeberg.org/jjba23
 #+end_example
 
 ---------------

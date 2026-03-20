@@ -42,14 +42,14 @@
                                                         #:indent (+ 4 indent))))
                         ((url-record? x)
                          (format #f
-                                 "~aurl: ~a~a~a | ~a\n"
+                                 "~a~a~a~a | ~a\n"
                                  (make-string indent #\space)
                                  (url-name x)
                                  (if (url-added x)
                                      (format #f " added: ~a "
                                              (url-added x)) "")
-                                 (if (url-tags x)
-                                     (format #f " tags: ~a "
+                                 (if (list? (url-tags x))
+                                     (format #f " ~a "
                                              (url-tags x)) "")
                                  (if (string-prefix? "http"
                                                      (url-link x))

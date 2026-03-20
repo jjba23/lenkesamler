@@ -54,15 +54,13 @@
                         (install-file "scripts/log.bash"
                                       (string-append share "/scripts/"))
                         (chmod (string-append bin "/lenkesamler") #o755)))))))
-    
+
     (build-system guile-build-system)
     (native-inputs (list guile-3.0))
     (propagated-inputs (list guile-json-4))
     (inputs (list guile-3.0 bash-minimal))
-    (synopsis
-     "")
-    (description
-     "")
+    (synopsis "")
+    (description "")
     (home-page "https://codeberg.org/jjba23/lenkesamler")
     (license license:agpl3+)))
 

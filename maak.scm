@@ -85,14 +85,15 @@
                                 "guile -L ./src -c '((@(lenkesamler main) main))'"
                                 (~
                                  "--file /home/joe/Hacking/lenkesamler/bookmarks/~a.scm"
-                                 bookmarks-file) "--destination ./bookmarks-export.html"
+                                 bookmarks-file)
+                                "--destination ./bookmarks-export.html"
                                 "--resources ./resources")
                                #:verbose? #t))
 
 (define (run* bookmarks-file)
   (time-machine-program-shell (list (~ "lenkesamler --file ./bookmarks/~a.scm"
-                                       bookmarks-file) "--destination ./bookmarks-export.html"
-                                    )
+                                     bookmarks-file)
+                                    "--destination ./bookmarks-export.html")
                               #:verbose? #t))
 
 (define (run)
@@ -100,7 +101,7 @@
   (run* 'joe))
 
 (define (dev-run)
-  "Run lenkesamler (dev)."  
+  "Run lenkesamler (dev)."
   (dev-run* 'joe))
 
 (define (hot-reload)
