@@ -22,16 +22,24 @@
 (define emacs-dir
   (dir "Emacs"
        (url "protesilaos.com/codelog/2024-09-10-emacs-show-font-0-1-0"
-            #:name "show-font")
+            #:name "show-font"
+            #:added "2026-03-17")
        (url "www.gnu.org/software/emacs/manual/html_mono/calc.html"
             #:name "Calc Manual"
+            #:added "2026-03-18"
             #:tags '(calc))))
 
 (define dev-dir
   (dir "Dev"
-       (url
-        "www.iankduncan.com/engineering/2026-02-09-what-functional-programmers-get-wrong-about-systems/"
-        #:name "What functional programmers get wrong about systems")))
+       (url "codeberg.org/jjba23"
+            #:name "Codeberg"
+            #:added "2025-01-22"
+            #:tags '(dev))
+       (dir "Articles"
+            (url
+             "www.iankduncan.com/engineering/2026-02-09-what-functional-programmers-get-wrong-about-systems/"
+             #:name "What functional programmers get wrong about systems"
+             #:added "2026-03-20"))))
 
 (define jointhefreeworld-dir
   (dir "jointhefreeworld"
@@ -62,9 +70,15 @@
         #:tags '(work))))
 
 (define work-dir
-  (dir "Work" work-documents-dir
+  (dir "Work"
        (url "app.slack.com/client/T1XNW2SF5/C08UHE7KM99"
             #:name "Slack")
+       (url "vandebron.atlassian.net/jira/software/c/projects/PT/boards/223"
+            #:name "Kanban Payments")
+       (url
+        "github.com/Vandebron/onboarding/blob/main/onboarding/setup-internal-registries.md"
+        #:name "Onboarding VDB")
+       work-documents-dir
        (dir "Ops P"
             (url "grafana.prod-backend.vdbinfra.nl"
                  #:name "Grafana"))
@@ -79,6 +93,11 @@
        (url "mastodon.social"
             #:name "Mastodon")))
 
+(define utils-dir
+  (dir "Utils"
+       (url "my.1password.com/home"
+            #:name "1Password")))
+
 (define joe-bookmarks
   (list jointhefreeworld-dir
         work-dir
@@ -86,12 +105,8 @@
         emacs-dir
         social-dir
         torrents-dir
-        (url "codeberg.org/jjba23"
-             #:name "Codeberg"
-             #:added "2025-01-22"
-             #:tags '(dev))))
+        utils-dir))
 
 (define lenkesamler-bookmarks
   joe-bookmarks)
-
 
