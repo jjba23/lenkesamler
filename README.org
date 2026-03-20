@@ -71,6 +71,22 @@ keywords of the DSL:
 #+end_src
 
  Also modularizing your bookmarks becomes trivial as you can even split into multiple files and ~(load "my-other-bookmarks.scm")~
+
+ You can also easily do dynamic things:
+ #+begin_src scheme
+ (map (lambda (kv)
+       (dir (format #f "Ops ~a"
+                    (car kv))
+            (url (format #f "grafana.~a-backend.vdbinfra.nl"
+                         (cadr kv))
+                 #:name "Grafana")
+            (url (format #f "argocd.prod-backend.vdbinfra.nl"
+                         (cadr kv))
+                 #:name "ArgoCD")))
+     '((prod . prod)
+       (acce . acce)
+       (test . test)))
+ #+end_src
  
 -------------
 

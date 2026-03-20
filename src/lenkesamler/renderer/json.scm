@@ -65,6 +65,8 @@
      (serialize-dir x))
     ((url-record? x)
      (serialize-url x))
+    ((list? x)
+     (map parse-lenksamler-to-json x))
     (else (throw "unknown data type for bookmark" x))))
 
 (define* (json-bookmark-renderer xs)

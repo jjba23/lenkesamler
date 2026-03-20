@@ -79,12 +79,13 @@
         "github.com/Vandebron/onboarding/blob/main/onboarding/setup-internal-registries.md"
         #:name "Onboarding VDB")
        work-documents-dir
-       (dir "Ops P"
-            (url "grafana.prod-backend.vdbinfra.nl"
-                 #:name "Grafana"))
-       (dir "Ops T"
-            (url "grafana.test-backend.vdbinfra.nl"
-                 #:name "Grafana"))))
+       (map (lambda (k)
+              (dir (format #f "Ops ~a" k)
+                   (url (format #f "grafana.~a-backend.vdbinfra.nl" k)
+                        #:name "Grafana")
+                   (url (format #f "argocd.~a-backend.vdbinfra.nl" k)
+                        #:name "ArgoCD")))
+            '(prod test acce))))
 
 (define social-dir
   (dir "Social"

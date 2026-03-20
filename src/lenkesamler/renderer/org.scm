@@ -48,5 +48,9 @@
                                      (format #f "https://~a"
                                              (url-link x)))
                                  (url-name x)))
+                        ((list? x)
+                         (map (lambda (item)
+                                (org-bookmark-renderer item
+                                                       #:indent indent)) x))
                         (else (throw "unknown data type for bookmark" x)))) xs)
                ""))

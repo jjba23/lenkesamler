@@ -61,6 +61,8 @@
      (dir-to-html x))
     ((url-record? x)
      (url-to-html x))
+    ((list? x)
+     (map parse-lenksamler-to-html x))
     (else (throw "unknown data type for bookmark" x))))
 
 (define* (netscape-bookmark-renderer xs)
