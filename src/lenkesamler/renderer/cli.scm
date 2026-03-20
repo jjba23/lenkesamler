@@ -35,10 +35,10 @@
   (string-join (map (lambda (x)
                       (cond
                         ((dir-record? x)
-                         (format #f "\n~a[ ~a ]\n~a"
+                         (format #f "\n~a[~a]\n~a"
                                  (make-string indent #\space)
                                  (dir-name x)
-                                 (cli-bookmark-renderer (dir-items x)
+                                 (cli-bookmark-renderer (flatten (dir-items x))
                                                         #:indent (+ 4 indent))))
                         ((url-record? x)
                          (format #f
@@ -59,6 +59,7 @@
                         ((list? x)
                          (map (lambda (item)
                                 (cli-bookmark-renderer item
-                                                       #:indent indent)) x))
+                                                       #:indent indent))
+                              (flatten x)))
                         (else (throw "unknown data type for bookmark" x)))) xs)
                ""))

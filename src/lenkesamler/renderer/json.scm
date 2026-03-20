@@ -45,7 +45,7 @@
           (dir-name x))
     (items unquote
            (list->vector (map parse-lenksamler-to-json
-                              (dir-items x))))))
+                              (flatten (dir-items x)))))))
 
 (define (serialize-url x)
   `((link unquote
@@ -66,10 +66,11 @@
     ((url-record? x)
      (serialize-url x))
     ((list? x)
-     (map parse-lenksamler-to-json x))
+    (list->vector  (map parse-lenksamler-to-json x)))
     (else (throw "unknown data type for bookmark" x))))
 
+
 (define* (json-bookmark-renderer xs)
-  (let* ((parsed (map parse-lenksamler-to-json xs))
+  (let* ((parsed (map parse-lenksamler-to-json (flatten xs)))
          (serialized (scm->json-string `((bookmarks unquote (list->vector parsed))))))
     serialized))

@@ -32,6 +32,7 @@
                         ymd-date-to-epoch
                         url-record
                         dir-record
+                        flatten
                         make-dir
                         dir
                         url
@@ -82,3 +83,8 @@
   (let* ((parsed (string->date date "~Y-~m-~d"))
          (time (date->time-utc parsed)))
     (time-second time)))
+
+(define (flatten x)
+  (cond ((null? x) '())
+        ((pair? x) (append (flatten (car x)) (flatten (cdr x))))
+        (else (list x))))

@@ -38,7 +38,7 @@
                          (format #f "\n\n~a ~a\n~a"
                                  (make-string indent #\*)
                                  (dir-name x)
-                                 (org-bookmark-renderer (dir-items x)
+                                 (org-bookmark-renderer (flatten (dir-items x))
                                                         #:indent (+ 1 indent))))
                         ((url-record? x)
                          (format #f "\n- [[~a][~a]]"
@@ -51,6 +51,6 @@
                         ((list? x)
                          (map (lambda (item)
                                 (org-bookmark-renderer item
-                                                       #:indent indent)) x))
+                                                       #:indent indent)) (flatten x)))
                         (else (throw "unknown data type for bookmark" x)))) xs)
                ""))
