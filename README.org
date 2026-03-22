@@ -105,6 +105,8 @@ Supported modes of operation are:
 - ~netscape~ / ~browser~ / ~web~ : Netscape Web Browser Bookmark format
 - ~markdown~ / ~md~ / ~commonmark~ : Markdown format
 
+The default mode is ~netscape~
+
 [[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]  
 
 
