@@ -45,11 +45,7 @@
                (dir-items x)) "<P>")))
 
 (define (url-to-html x)
-  `("\n<DT>" (A (@ (HREF ,(if (string-prefix? "http"
-                                              (url-link x))
-                              (url-link x)
-                              (format #f "https://~a"
-                                      (url-link x))))
+  `("\n<DT>" (A (@ (HREF ,(url-string-with-protocol (url-link x)))
                    ,@(if (url-added x)
                          `((ADD_DATE ,(ymd-date-to-epoch (url-added x))))
                          '()))

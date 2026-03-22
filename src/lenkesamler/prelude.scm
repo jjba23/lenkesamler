@@ -44,7 +44,8 @@
                         url-name
                         url-added
                         url-tags
-                        url-link))
+                        url-link
+                        url-string-with-protocol))
 
 (define* (~ #:rest args)
   (apply format
@@ -92,3 +93,12 @@
      (append (flatten (car x))
              (flatten (cdr x))))
     (else (list x))))
+
+(define* (url-string-with-protocol x
+                                   #:key (fallback-protocol "https://"))
+  (cond
+    ((string-prefix? "https:" x)
+     x)
+    ((string-prefix? "http:" x)
+     x)
+    (else (format #f "~a~a" fallback-protocol x))))

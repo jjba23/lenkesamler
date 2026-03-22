@@ -51,11 +51,7 @@
                                  (if (list? (url-tags x))
                                      (format #f " ~a "
                                              (url-tags x)) "")
-                                 (if (string-prefix? "http"
-                                                     (url-link x))
-                                     (url-link x)
-                                     (format #f "https://~a"
-                                             (url-link x)))))
+                                 (url-string-with-protocol (url-link x))))
                         ((list? x)
                          (map (lambda (item)
                                 (cli-bookmark-renderer item

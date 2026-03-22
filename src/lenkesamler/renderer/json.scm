@@ -49,7 +49,7 @@
 
 (define (serialize-url x)
   `((link unquote
-          (url-link x))
+                                           (url-string-with-protocol (url-link x)))
     (name unquote
           (url-name x))
     (added unquote

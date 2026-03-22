@@ -22,6 +22,7 @@
   #:use-module (lenkesamler renderer org)
   #:use-module (lenkesamler renderer netscape)
   #:use-module (lenkesamler renderer json)
+  #:use-module (lenkesamler renderer markdown)
   #:use-module (lenkesamler prelude)
   #:use-module (lenkesamler html)
   #:export (main))
@@ -71,6 +72,10 @@ Lenkesamler: Your bookmark manager and sync tool powered by Lisp
         ((eq? mode
               'json)
          (display (json-bookmark-renderer user-bookmarks))
+         (newline))
+        ((eq? mode
+              'markdown)
+         (display (markdown-bookmark-renderer user-bookmarks))
          (newline))
         ((eq? mode
               'netscape)

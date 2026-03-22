@@ -42,11 +42,7 @@
                                                         #:indent (+ 1 indent))))
                         ((url-record? x)
                          (format #f "\n- [[~a][~a]]"
-                                 (if (string-prefix? "http"
-                                                     (url-link x))
-                                     (url-link x)
-                                     (format #f "https://~a"
-                                             (url-link x)))
+                                 (url-string-with-protocol (url-link x))
                                  (url-name x)))
                         ((list? x)
                          (map (lambda (item)
