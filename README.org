@@ -97,6 +97,7 @@ Supported modes of operation are:
 - ~json~
 - ~org~
 - ~netscape~
+- ~markdown~
 
 [[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]  
 
@@ -179,6 +180,26 @@ With lenkesamler you can easily generate pretty Org mode documents (which furthe
 
 * Dev
 - [[https://www.iankduncan.com/engineering/2026-02-09-what-functional-programmers-get-wrong-about-systems/][What functional programmers get wrong about systems]]
+#+end_example
+
+
+
+-----------------
+
+** Markdown  format
+
+The popular plain-text format used by modern note-taking apps (Obsidian, Logseq, Notion, GitHub, etc)
+
+#+begin_example
+# Work
+
+- [Slack](https://app.slack.com/client/TWW1XNW2SF5/C08UHE7KM99)
+- [Kanban](https://atlassian.net/jira/software/c/projects/PT/boards/223)
+- [Onboarding VDB](https://github.com/onboarding/blob/main/onboarding/setup-internal-registries.md)
+
+## Documents
+
+- [🌐 REST standards](https://atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards)
 #+end_example
 
 ----------------
@@ -278,8 +299,6 @@ Add a command like lenkesamler check that iterates through the DSL, pings every 
 *** Formats that will futurely be supported
 
 HTML - The Netscape format seriously deviates from correct HTML. It could be useful to have a simple and a prettified (w/ CSS) valid HTML exporters.
-
-Markdown - The universal plain-text format used by modern note-taking apps (Obsidian, Logseq, Notion). Great for users who want to sync their bookmarks into their "Second Brain" or personal knowledge base.
 
 XBEL (XML)XML Bookmark Exchange Language - An open XML standard created in the late 90s by the Python XML SIG.Somewhat niche today, but still supported by some open-source browsers (like Midori or Falkon) and bookmark managers.
 
