@@ -18,6 +18,7 @@
 (define-module (lenkesamler main)
   #:declarative? #f
   #:use-module (ice-9 getopt-long)
+  #:use-module (ice-9 match)
   #:use-module (lenkesamler renderer cli)
   #:use-module (lenkesamler renderer org)
   #:use-module (lenkesamler renderer netscape)
@@ -60,26 +61,23 @@ Lenkesamler: Your bookmark manager and sync tool powered by Lisp
     (load file)
     ;; --- Render bookmarks ---
     (let* ((user-bookmarks (get-setting 'lenkesamler-bookmarks)))
-      (cond
-        ((eq? mode
-              'cli)
-         (display (cli-bookmark-renderer user-bookmarks))
+      (match mode
+        ('cli (display (cli-bookmark-renderer user-bookmarks))
          (newline))
-        ((eq? mode
-              'org)
-         (display (org-bookmark-renderer user-bookmarks))
+        ('org (display (org-bookmark-renderer user-bookmarks))
          (newline))
-        ((eq? mode
-              'json)
-         (display (json-bookmark-renderer user-bookmarks))
+        ('json (display (json-bookmark-renderer user-bookmarks))
          (newline))
-        ((eq? mode
-              'markdown)
+        ((or 'markdown
+             'md
+             'commonmark)
          (display (markdown-bookmark-renderer user-bookmarks))
          (newline))
-        ((eq? mode
-              'netscape)
+        ((or 'netscape
+             'browser
+             'web)
          (display (with-output-to-string (lambda ()
                                            (sxml->xml (netscape-bookmark-renderer
                                                        user-bookmarks))))))
-        (else (throw "unknown mode specified" mode))))))
+        (_ (throw "unknown mode specified" mode))))))
+
