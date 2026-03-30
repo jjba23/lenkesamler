@@ -41,6 +41,13 @@
              #:name "What functional programmers get wrong about systems"
              #:added "2026-03-20"))))
 
+(define games-dir
+  (dir "Games"
+       (dir "Genshin"
+            (url
+             "act.hoyolab.com/ys/app/interactive-map/index.html?lang=en-us#/map/2?shown_types=&center=2008.50,-1084.00&zoom=-3.00"
+             #:name "Teyvat Map"))))
+
 (define jointhefreeworld-dir
   (dir "jointhefreeworld"
        (url "jointhefreeworld.org")
@@ -67,7 +74,18 @@
        (url
         "vandebron.atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards"
         #:name "🌐 REST standards"
-        #:tags '(work))))
+        #:tags '(work))
+       (url
+        "vandebron.atlassian.net/wiki/spaces/DIG/pages/95582920015899/Energy+Report+-+Useful+links+observability+monitoring"
+        #:name "Energy Report Links")
+       (url
+        "vandebron.lightning.force.com/lightning/r/Report/00OVk00000GJGXhMAP/view"
+        #:name "Energy Report Salesforce Cases")
+       (url "github.com/Vandebron/town-steering"
+            #:name "Town Steering")
+       (url
+        "vandebron.atlassian.net/wiki/spaces/DIG/pages/95583079858182/Gewoon+Spring+explained+DRAFT"
+        #:name "Gewoon Spring")))
 
 (define work-dir
   (dir "Work"
@@ -78,15 +96,30 @@
        (url
         "github.com/Vandebron/onboarding/blob/main/onboarding/setup-internal-registries.md"
         #:name "Onboarding VDB")
+       (url
+        "ecedo-test.vdbinfra.nl/swagger/ui/#!/SysAdvancePayments/SysAdvancePayments_Get_MostRecent"
+        #:name "Ecedo Swagger")
+       (url "sonarcloud.io/projects"
+            #:name "SonarQube")
+       (url
+        "sites.google.com/vandebron.nl/wiki-people-and-culture/people-topics/wellbeing-personal-growth#h.wkj5f3k9gbrr"
+        #:name "People&Culture")
+       (dir "GraphQL"
+            (url "the-guild.dev/graphql/tools/docs/mocking"
+                 #:name "Mocking GraphQL"))
+       (url "vandebron.atlassian.net/wiki/spaces/DIG/pages/95582464311304/Support+hero"
+            #:name "Support Hero")
        work-documents-dir
        (map (lambda (k)
               (dir (format #f "Ops ~a" k)
                    (url (format #f "grafana.~a-backend.vdbinfra.nl" k)
-                        #:name "Grafana")
+                        #:name (format #f "Grafana ~a" k))
                    (url (format #f "argocd.~a-backend.vdbinfra.nl" k)
-                        #:name "ArgoCD")
+                        #:name (format #f "ArgoCD ~a" k))
+                   (url (format #f "dbgate-ms.~a-backend.vdbinfra.nl/")
+                        #:name (format #f "DBGate MS ~a" k))
                    (url (format #f "docs.~a.vandebron.dev" k)
-                        #:name "API Catalog")))
+                        #:name (format #f "API Catalog ~a" k))))
             '(prod test acce))))
 
 (define social-dir
