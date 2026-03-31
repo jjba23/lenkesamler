@@ -109,6 +109,10 @@
                  #:name "Mocking GraphQL"))
        (url "vandebron.atlassian.net/wiki/spaces/DIG/pages/95582464311304/Support+hero"
             #:name "Support Hero")
+       (url "keepersecurity.eu/vault/#"
+            #:name "Keeper Vault")
+       (url "github.com/pulls?q=is%3Aopen+is%3Apr+label%3Arenovate+team-review-requested%3AVandebron%2Fteam-payments"
+            #:name "Dependency Update PRs")
        work-documents-dir
        (map (lambda (k)
               (dir (format #f "Ops ~a" k)
