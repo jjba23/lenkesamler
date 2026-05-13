@@ -101,8 +101,8 @@
   (dir "Work"
        (url "app.slack.com/client/T1XNW2SF5/C08UHE7KM99"
             #:name "Slack")
-       (url "vandebron.atlassian.net/jira/software/c/projects/PT/boards/223"
-            #:name "Kanban Payments")
+       (url "vandebron.atlassian.net/jira/software/c/projects/PT/boards/1493"
+            #:name "Sprint Payments")
        (url "portal.vdbinfra.nl"
             #:name "Backstage Portal")
        (url
@@ -185,4 +185,3 @@
 
 (define lenkesamler-bookmarks
   joe-bookmarks)
-
