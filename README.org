@@ -4,8 +4,8 @@
 #+language: en
 #+options: toc:nil num:nil
 
-[[https://jointhefreeworld.org/ggg/dist/scheme-guile.svg]] [[https://jointhefreeworld.org/ggg/dist/gnu-guix.svg]]   [[https://jointhefreeworld.org/ggg/dist/maak.svg]] 
-[[https://jointhefreeworld.org/ggg/dist/license-agpl3+.svg]]    [[https://jointhefreeworld.org/ggg/dist/license-fdl13+.svg]] 
+[[https://jointhefreeworld.org/ggg/dist/scheme-guile.svg]] [[https://jointhefreeworld.org/ggg/dist/gnu-guix.svg]]   [[https://jointhefreeworld.org/ggg/dist/maak.svg]]
+[[https://jointhefreeworld.org/ggg/dist/license-agpl3+.svg]]    [[https://jointhefreeworld.org/ggg/dist/license-fdl13+.svg]]
 
 Lenkesamler (Norwegian for "link collector") is your ultimate bookmark manager, syncing tool, and digital archive. Bookmarking for the next 50 years.
 
@@ -37,7 +37,7 @@ You shouldn't be locked into one tool or browser. Lenkesamler is built with a "n
 
 --------------
 
-** About Lisp, the DSL, the Prelude and 
+** About Lisp, the DSL, the Prelude and
 
 Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using a full and flexible programming language: Lisp (Guile Scheme).
 
@@ -89,7 +89,7 @@ keywords of the DSL:
                  #:name "ArgoCD")))
      '(prod test acce))
  #+end_src
- 
+
 -------------
 
 Need to generate bookmarks from an API? Write a function. Need to output to a weird, undocumented (or god forbid proprietary) format 10 years from now? Write a custom exporter in a few lines of Lisp.
@@ -107,7 +107,7 @@ Supported modes of operation are:
 
 The default mode is ~netscape~
 
-[[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]  
+[[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]
 
 
 --------------
@@ -138,7 +138,7 @@ Codeberg | https://codeberg.org/jjba23
 
 Netscape legacy - most web browsers still use it.
 
-The archaic *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks. 
+The archaic *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks.
 
 This format is the definition of "legacy" in software. It is built on weird non-compliant, semi-valid HTML from the 1990's.
 
@@ -182,7 +182,7 @@ With lenkesamler you can easily generate pretty Org mode documents (which furthe
 * Work
 
 - [[https://app.slack.com/client/T1XNW2SF5/C08UHE7KM99][Slack]]
-  
+
 ** Documents
 - [[https://vandebron.atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards][🌐 REST standards]]
 
@@ -284,9 +284,22 @@ https://www.gnu.org/licenses/agpl-3.0.html
 The documentation and examples, including this document, which are provided with lenkesamler, are all licensed under the GNU Free Documentation License v1.3 (or newer at your convenience).
 
 https://www.gnu.org/licenses/fdl-1.3.html
-  
+
 
 ----------
+
+* AI Policy
+
+This project adheres to the [[https://jointhefreeworld.org/blog/articles/personal/jointhefreeworld-ai-policy/index.html][jointhefreeworld AI (Artificial Intelligence) policy]].
+
+Our core principle is simple: *AI should assist human creativity and problem-solving, never replace human reasoning.*
+
+While tools like Large Language Models (LLMs) and interactive chatbots can be beneficial for reviewing, refactoring small functions, or acting as a sounding board, they should be used with moderation.
+
+We require a human in the loop for all contributions. The use of autonomous AI agents to automatically generate and submit pull requests to this project is strictly prohibited.
+
+
+-----------------
 
 * Code of conduct
 
