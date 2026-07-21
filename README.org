@@ -337,8 +337,6 @@ What if a user wants to migrate to Lenkesamler? We should write a parser that ta
 
 ---------------
 
-* Closing thoughts
-
 By treating your bookmarks as pure, programmable data rather than a hidden database inside a specific browser, you guarantee that *your knowledge base will outlive the software used to view them*.
 
 Define your bookmarks once in a central file, and let Lenkesamler translate them into whatever format you need today, or whatever format gets invented tomorrow.
