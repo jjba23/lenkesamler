@@ -34,10 +34,24 @@
 ;;; lenkesamler and not a run with a report in the middle of the file.
 ;;;
 ;;; The rest is the reading of what a mode is: the spellings the README gives of
-;;; a mode are the same document, and a mode nobody knows -- CSV is a TODO of
+;;; a mode are the same document, and a mode nobody knows -- SQLite is a TODO of
 ;;; the README, not a mode -- is a mistake to be named rather than a document to
 ;;; be guessed at.  A file that is not there, and a file with no bookmarks in
 ;;; it, are named the same way.
+;;;
+;;; `--import' takes a file from somewhere else and writes a bookmarks file back,
+;;; without being told which kind of file it was given: a browser's file and this
+;;; project's JSON are both read, and one of each is read here.  What the run
+;;; wrote is read again by another run, because a file that only looked like a
+;;; bookmarks file would pass every reading of the text.
+;;;
+;;; `--check' writes a report where a document would be.  The file it is run over
+;;; holds no pages, so the report is of links that are skipped rather than of the
+;;; internet: what is read here is that a check is a run like any other -- a
+;;; report in the place of a document, and no mode to choose.  A check that finds
+;;; a broken link exits non-zero, which a spec process cannot observe without
+;;; exiting itself, so that reading is in `(veritas unit checker-spec)', where a
+;;; check is given its answers instead of asking.
 ;;;
 ;;; The suite runs its readings one after another, because they share the file
 ;;; they load: a bookmarks file becomes the module `(lenkesamler bookmarks)',
@@ -61,6 +75,25 @@
 ;; need not be there, so the run is also read for the directory it made.
 (define destination
   "reports/spec/links.html")
+
+;; The bookmarks file a browser wrote, and the bookmarks file a run makes of it.
+(define browser-file
+  "test/fixtures/browser-bookmarks.html")
+
+(define imported-file
+  "reports/spec/imported-bookmarks.scm")
+
+;; The JSON a program reads, and the bookmarks file a run makes of it.
+(define json-file
+  "test/fixtures/bookmarks.json")
+
+(define imported-json-file
+  "reports/spec/imported-json-bookmarks.scm")
+
+;; A bookmarks file whose links are not pages, so that a check of it asks
+;; nothing of the internet.
+(define offline-file
+  "test/fixtures/offline-bookmarks.scm")
 
 (define (run . arguments)
   "A run of lenkesamler over the ARGUMENTS, as its document is written.
@@ -137,15 +170,21 @@ what printing a document means."
                  (assert-equal #:name "and netscape is browser and web"
                                #:expect (render-bookmarks bookmarks 'netscape)
                                #:got (render-bookmarks bookmarks 'web))
+                 (assert-equal #:name "and scheme is scm"
+                               #:expect (render-bookmarks bookmarks 'scheme)
+                               #:got (render-bookmarks bookmarks 'scm))
                  (assert-contains #:name
                   "and a folder built by map is read, whatever the mode"
                   #:expect (render-bookmarks bookmarks 'cli)
-                  #:got "Grafana | https://grafana.prod-backend.nl")))
+                  #:got "Grafana | https://grafana.prod-backend.nl")
+                 (assert-contains #:name "and xbel is an XML document"
+                  #:expect (render-bookmarks bookmarks 'xbel)
+                  #:got "<xbel version=\"1.0\">")))
          (test "a mode nobody knows is named as a mistake"
                #:shuffle? #f
                (assert-error (lambda ()
-                               (render-bookmarks (list (url "a.example")) 'csv))
-                             #:name "there is no CSV mode yet"))
+                               (render-bookmarks (list (url "a.example")) 'sqlite))
+                             #:name "there is no SQLite mode yet"))
          (test "a bookmarks file that is not there is named as a mistake"
                #:shuffle? #f
                (assert-error (lambda ()
@@ -160,7 +199,92 @@ what printing a document means."
                  (run "--file" bookmarks-file "--mode" "cli")
                  (assert-error (lambda ()
                                  (get-setting 'lenkesamler-bookmarks-typo))
-                               #:name "asking for a setting the file does not define says which one")))))
+                               #:name "asking for a setting the file does not define says which one")))
+         (test "a browser's bookmarks file is imported as a bookmarks file"
+               #:shuffle? #f
+               (ignoring-errors (lambda () (delete-file imported-file)))
+               (let ((printed (run "--import" browser-file
+                                   "--destination" imported-file)))
+                 (assert-equal #:name
+                  "a run that imports writes a file and prints nothing"
+                  #:expect ""
+                  #:got printed)
+                 (assert-true (file-exists? imported-file)
+                              #:name "the file it wrote is there")
+                 (assert-contains #:name
+                  "and what it wrote is a bookmarks file of this project"
+                  #:expect (contents-of imported-file)
+                  #:got "(define lenkesamler-bookmarks")
+                 ;; The file a run wrote is a bookmarks file, so the reading of
+                 ;; it is another run of the program: a file that only looked
+                 ;; like a bookmarks file would fail here.
+                 (let ((read-again (run "--file" imported-file "--mode" "cli")))
+                   (assert-contains #:name "the folder a browser wrote is a folder here"
+                    #:expect read-again
+                    #:got "[Work]")
+                   (assert-contains #:name "and the link inside it is the link it was"
+                    #:expect read-again
+                    #:got "https://codeberg.org/jjba23")
+                   (assert-contains #:name "and the folder inside the folder keeps its name"
+                    #:expect read-again
+                    #:got "[Ops & friends]"))
+                 (ignoring-errors (lambda () (delete-file imported-file)))))
+         (test "a JSON bookmarks file is imported as a bookmarks file"
+               #:shuffle? #f
+               (ignoring-errors (lambda () (delete-file imported-json-file)))
+               (let ((printed (run "--import" json-file
+                                   "--destination" imported-json-file)))
+                 (assert-equal #:name "a run that imports writes a file"
+                               #:expect ""
+                               #:got printed)
+                 (let ((read-again (run "--file" imported-json-file
+                                        "--mode" "cli")))
+                   (assert-contains #:name "the folder a JSON document held is a folder here"
+                    #:expect read-again
+                    #:got "[Work]")
+                   (assert-contains #:name "with the folder inside it"
+                    #:expect read-again
+                    #:got "[Ops]")
+                   (assert-contains #:name "and the link leads where it did"
+                    #:expect read-again
+                    #:got "https://codeberg.org/jjba23"))
+                 ;; The tags of a JSON document are strings, and a bookmarks file
+                 ;; names them as symbols: what a run wrote is read here as the
+                 ;; source it is, because a tag read as a string would read as
+                 ;; one until somebody's file would not load.
+                 (assert-contains #:name "and the tags came with it, as a file writes them"
+                  #:expect (contents-of imported-json-file)
+                  #:got "#:tags '(dev)")
+                 (ignoring-errors (lambda () (delete-file imported-json-file)))))
+         (test "a check is a report, not a document"
+               #:shuffle? #f
+               (let ((printed (begin
+                                (run "--file" bookmarks-file "--mode" "cli")
+                                (run "--file" offline-file "--check"))))
+                 (assert-contains #:name "a run that checks prints its report"
+                  #:expect printed
+                  #:got "checked 2 links")
+                 (assert-contains #:name
+                  "a link that is not a page is said to be skipped, and not to be gone"
+                  #:expect printed
+                  #:got "skipped  mailto:post@example.org (not a web address)")
+                 (assert-contains #:name "an address written twice is reported once"
+                  #:expect printed
+                  #:got "0 ok, 0 moved, 0 broken, 0 error, 2 skipped"))
+               (assert-error (lambda ()
+                               (run "--file" offline-file
+                                    "--check"
+                                    "--mode" "cli"))
+                             #:name "a run that checks takes no mode, because it writes no document"))
+         (test "a run reads one file, and is told which"
+               #:shuffle? #f
+               (assert-error (lambda ()
+                               (run "--file" bookmarks-file
+                                    "--import" browser-file
+                                    "--mode" "cli"))
+                             #:name "a run given both a bookmarks file and a browser's file")
+               (assert-error (lambda () (run "--mode" "cli"))
+                             #:name "a run given no file at all"))))
 
 (define (spec)
   (veritas-run main-suite))

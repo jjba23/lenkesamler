@@ -50,9 +50,13 @@ steps:
         branch: [*main_branch]
     settings:
       BYGGSTEG_URL: *jointhefreeworld_byggsteg_url
+      # Two tasks, in this order: a job of several tasks is a pipeline of them,
+      # and byggsteg stops at the first that fails -- so a commit whose tests
+      # fail is never deployed, and the poll step below reports the failure and
+      # fails the build.
       BYGGSTEG_JOB_CODE: |
         (lambda()
-          `((task . "maak-deploy")
+          `((task . ("maak-test" "maak-deploy"))
             (project . "%%CI_REPO_NAME%%")
             (branch-name . "%%CI_COMMIT_BRANCH%%")
             (clone-url . "%%CI_REPO_CLONE_URL%%")))

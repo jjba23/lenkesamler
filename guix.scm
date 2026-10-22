@@ -26,7 +26,8 @@
              (gnu packages)
              (gnu packages bash)
              (gnu packages guile)
-             (gnu packages guile-xyz))
+             (gnu packages guile-xyz)
+             (gnu packages tls))
 
 (define %source-dir
   (dirname (current-filename)))
@@ -58,7 +59,10 @@
     (build-system guile-build-system)
     (native-inputs (list guile-3.0))
     (propagated-inputs (list guile-json-4))
-    (inputs (list guile-3.0 bash-minimal))
+    ;; A check of a bookmarks file asks https addresses, and Guile's web client
+    ;; asks GnuTLS to do it: the bindings are loaded at run time, so an
+    ;; installed lenkesamler has to carry them.
+    (inputs (list guile-3.0 bash-minimal gnutls guile-gnutls))
     (synopsis "")
     (description "")
     (home-page "https://codeberg.org/jjba23/lenkesamler")

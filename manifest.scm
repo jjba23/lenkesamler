@@ -22,6 +22,7 @@
              (guix download)
              (gnu packages guile)
              (gnu packages nss)
+             (gnu packages tls)
              (gnu packages admin)
              (gnu packages web)
              (gnu packages gnupg)
@@ -74,5 +75,11 @@ tests.  Veritas shuffles tests and runs them concurrently by default.")
                           watchexec
                           texinfo
                           guile-documenta
-                          guile-ares-rs))
+                          guile-ares-rs
+                          ;; A check of a bookmarks file asks https addresses, and
+                          ;; Guile's web client asks GnuTLS to do it: the bindings
+                          ;; are loaded at run time, so the shell a check runs in
+                          ;; has to hold them.
+                          gnutls
+                          guile-gnutls))
 

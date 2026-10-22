@@ -56,11 +56,23 @@
         ,@(map parse-lenksamler-to-html
                (dir-items x)) "<P>")))
 
+;; A link's tags are written as the one `TAGS' attribute Firefox reads, comma
+;; separated -- which is also how they are read back again.  The attribute has
+;; been written and read by browsers since long before this project, and a link
+;; that came out of one with tags is a link that goes back into one with them.
+(define (tags-attribute tags)
+  (if (list? tags)
+      `((TAGS ,(string-join (map (lambda (tag)
+                                   (format #f "~a" tag)) tags)
+                            ",")))
+      '()))
+
 (define (url-to-html x)
   `("\n<DT>" (A (@ (HREF ,(url-string-with-protocol (url-link x)))
                    ,@(if (url-added x)
                          `((ADD_DATE ,(ymd-date-to-epoch (url-added x))))
-                         '()))
+                         '())
+                   ,@(tags-attribute (url-tags x)))
                 ,(text (url-name x)))))
 
 (define (parse-lenksamler-to-html x)

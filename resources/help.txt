@@ -1,16 +1,55 @@
-
 +----------------------------------------------------------------------------+
 Lenkesamler:
     Your bookmark manager and sync tool.
-    
+
     See more at: https://codeberg.org/jjba23/lenkesamler
     Software licensed under the GNU AGPL v3 or newer.
-    
+
 USAGE: lenkesamler [OPTIONS]
+
 OPTIONS:
-    TODO!
-        
+    -f, --file FILE
+        The bookmarks file to read: a Scheme file defining a module named
+        (lenkesamler bookmarks), which holds your bookmarks.
+
+    -i, --import FILE
+        Read a bookmarks file from somewhere else, instead of a Scheme file:
+        the file a browser exported, or a JSON document this program wrote.
+        Which of the two it is, is read from the file itself, and not from its
+        name.  The mode of such a run is scheme unless -m names another, so the
+        run writes a bookmarks file you can edit: this is how you migrate to
+        Lenkesamler.
+
+    -m, --mode MODE
+        What to write:
+            cli                             your terminal
+            csv                             a spreadsheet
+            json                            JSON
+            org                             Emacs Org mode
+            markdown (md, commonmark)       Markdown
+            netscape (browser, web)         a browser's bookmarks file
+            scheme (scm)                    a bookmarks file
+            xbel                            XML Bookmark Exchange Language
+        Defaults to netscape -- the format a browser imports.
+
+    -c, --check
+        Ask every link of the file what it answers now, and report it, instead
+        of writing a document: a link that answers, one that answers elsewhere,
+        one that refuses and one that does not answer at all.  Links that are
+        not web addresses, such as a mailto: address, are reported as skipped.
+        A file with a link that refuses or does not answer exits non-zero, so a
+        pipeline can check a bookmarks file.  A run that checks takes no -m.
+
+    -d, --destination FILE
+        Write the document to FILE instead of the standard output.  The
+        directory FILE names is made if it is not there yet.
+
     -h, --help
         Display this help message and exit.
+
+    What the run says about itself goes to the error port, so the standard
+    output holds the document and nothing else:
+
+        lenkesamler --file ./bookmarks/joe.scm --mode json | jq .
 
 +----------------------------------------------------------------------------+

@@ -1,0 +1,32 @@
+{
+  "bookmarks": [
+    {
+      "name": "Work",
+      "items": [
+        {
+          "link": "codeberg.org/jjba23",
+          "name": "Codeberg",
+          "added": "2025-01-22",
+          "tags": [
+            "dev"
+          ]
+        },
+        {
+          "name": "Ops",
+          "items": [
+            {
+              "link": "grafana.test-backend.nl",
+              "name": "Grafana",
+              "added": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "link": "mastodon.social",
+      "name": "Mastodon",
+      "added": false
+    }
+  ]
+}

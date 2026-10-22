@@ -48,15 +48,15 @@ show_help() {
   cat "${resources_dir}/help.txt"
 }
 
-parsed_options=$(getopt -n "lenkesamler" -o m:d:f:r:h \
-  --long mode:,destination:,file:,resources:,help -- "$@")
+parsed_options=$(getopt -n "lenkesamler" -o m:d:f:i:ch \
+  --long mode:,destination:,file:,import:,check,help -- "$@")
 
 eval set -- "${parsed_options}"
 
 mode_arg=""
 destination_arg=""
 file_arg=""
-resources_arg="${resources_dir}"
+import_arg=""
 
 guile_cmd_args=(
   "-L" "${scheme_sources_dir}"
@@ -80,12 +80,14 @@ while true; do
     guile_cmd_args+=("--file" "$(realpath "${file_arg}")")
     shift 2
     ;;
-  -r | --resources)
-    resources="${2}"
-    if [[ -n "${resources}" ]]; then
-      resources_arg="${resources}"
-      shift 2
-    fi
+  -i | --import)
+    import_arg="${2}"
+    [[ -n "${import_arg}" ]] && guile_cmd_args+=("--import" "$(realpath "${import_arg}")")
+    shift 2
+    ;;
+  -c | --check)
+    guile_cmd_args+=("--check")
+    shift
     ;;
   -h | --help)
     show_help
@@ -103,12 +105,15 @@ while true; do
   esac
 done
 
-# The resources
-guile_cmd_args+=("--resources" "${resources_arg}")
+# The bookmarks: either this project's own file, or the one a browser wrote
+if [[ -z "${file_arg}" && -z "${import_arg}" ]]; then
+  log_error "Error: One of -f/--file or -i/--import is required." >&2
+  show_help
+  exit 1
+fi
 
-# The bookmarks file
-if [[ -z "${file_arg}" ]]; then
-  log_error "Error: The file argument is required. Use -f or --file." >&2
+if [[ -n "${file_arg}" && -n "${import_arg}" ]]; then
+  log_error "Error: Use either -f/--file or -i/--import, not both." >&2
   show_help
   exit 1
 fi

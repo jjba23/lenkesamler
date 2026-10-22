@@ -114,8 +114,7 @@ has to be."
                                 (~
                                  "--file /home/joe/Hacking/lenkesamler/bookmarks/~a.scm"
                                  bookmarks-file)
-                                "--destination ./bookmarks-export.html"
-                                "--resources ./resources")
+                                "--destination ./bookmarks-export.html")
                                #:verbose? #t))
 
 (define (run* bookmarks-file)

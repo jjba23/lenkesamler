@@ -112,10 +112,13 @@ The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Sc
 
 Supported modes of operation are:
 - ~cli~: Command-line / TUI format
+- ~csv~: Comma-separated values, a row per bookmark
 - ~json~: JSON format
 - ~org~: Emacs Org mode format
 - ~netscape~ / ~browser~ / ~web~ : Netscape Web Browser Bookmark format
 - ~markdown~ / ~md~ / ~commonmark~ : Markdown format
+- ~scheme~ / ~scm~ : a bookmarks file, written back as the code you edit
+- ~xbel~ : XML Bookmark Exchange Language
 
 The default mode is ~netscape~
 
@@ -180,6 +183,78 @@ The format uses basic HTML tags to organize links and folder hierarchies:
 
 --------------
 
+** Importing
+
+Migration is the other direction of the same files. ~--import~ reads a
+bookmarks file from somewhere else -- the browser format above, read instead of
+written -- and writes it as the bookmarks file this program reads:
+
+#+begin_src shell
+lenkesamler --import ./bookmarks-from-firefox.html \
+            --destination ./bookmarks/joe.scm
+#+end_src
+
+The mode of such a run is ~scheme~ unless ~-m~ names another, so
+~--import ... --mode csv~ is a sheet of the bookmarks the browser had. The
+folders, the names, the addresses, the day a bookmark was added and the tags
+Firefox keeps with one are all kept; what a browser keeps of its own -- its
+icons, its cached charsets -- is dropped, because it is not a bookmark.
+
+What this program writes as ~json~ is read back the same way, so a document
+that was piped into another program can come home again:
+
+#+begin_src shell
+lenkesamler --file ./bookmarks/joe.scm --mode json > joe.json
+lenkesamler --import joe.json --destination ./bookmarks/joe.scm
+#+end_src
+
+The two kinds of file are told apart by what they hold and not by their names:
+a JSON document begins with an object or a list, and a browser's file is the
+rest.  A file called ~bookmarks.html~ that holds JSON is read as JSON, because a
+file is worth migrating whatever it was called.
+
+A link your file writes without a scheme comes back with one
+(~https://codeberg.org/jjba23~), because a JSON document says the address a
+bookmark leads to and not the shorthand you typed next to it.  The folders, the
+names, the days and the tags are the ones the document held.
+
+--------------
+
+** Checking the links
+
+A bookmarks file is a promise about addresses, and the addresses are the part of
+it that somebody else can break.  ~--check~ asks every one of them what it
+answers now:
+
+#+begin_src shell
+lenkesamler --file ./bookmarks/joe.scm --check
+#+end_src
+
+#+begin_example
+checked 3 links
+ok       https://codeberg.org/jjba23 (200)
+moved    https://mastodon.social (301 -> https://mastodon.social/home)
+broken   https://grafana.test-backend.nl (404)
+1 ok, 1 moved, 1 broken, 0 error, 0 skipped
+#+end_example
+
+A link that answers is ~ok~; one that answers with a redirect is ~moved~ and is
+not a failure, because the bookmark still leads somewhere; one that answers with
+a refusal (a 404, a 500) is ~broken~; and one that does not answer at all -- no
+DNS, no connection, a server that hangs up -- is ~error~.  A run with a ~broken~
+or an ~error~ link exits non-zero, so a pipeline can watch a bookmarks file.
+
+What is asked is a ~HEAD~ request -- the status of a page without the page -- and
+a server that does not allow one (405 or 501) is asked for the page itself.  An
+address that is not a page is not a broken link: a ~mailto:~ address, a
+~magnet:~ link and the like are reported as ~skipped~ and are not a failure.
+
+The report goes where the document of a mode would go: to the standard output,
+or to ~--destination~ when a run names one.  A run that checks writes no
+document, so it takes no ~--mode~.
+
+--------------
+
 ** Org mode format
 
 A killer-feature for anyone that uses this amazing Emacs mode 🐂.
@@ -224,9 +299,31 @@ The popular plain-text format used by modern note-taking apps (Obsidian, Logseq,
 
 ----------------
 
+** CSV format
+
+A spreadsheet. One row per bookmark, and the folders a bookmark was written in
+carried in the ~folder~ column, outermost first -- empty for a bookmark of the
+top level, and ~Work/Ops~ for one inside a folder inside a folder.
+
+A name is written as RFC 4180 says to write a field: quoted when it holds a
+comma, a quote or a line break, with the quotes in it doubled. A bookmark named
+~R&D, notes~ is a name, not four columns.
+
+#+begin_example
+folder,name,url,added,tags
+dev,Codeberg,https://codeberg.org/jjba23,2025-01-22,"dev, emacs"
+dev/Articles,What functional programmers get wrong,https://www.iankduncan.com/engineering/2026-02-09-what-functional-programmers-get-wrong-about-systems,2026-03-20,
+,Mastodon,https://mastodon.social,,
+#+end_example
+
+----------------
+
 ** JSON format
 
 The modern standard for data exchange. Browsers like Chromium store bookmarks internally as JSON. High Priority. Essential for programmatic use, API integrations, or piping Lenkesamler output into other CLI tools like jq.
+
+This document is also one of the two kinds of file ~--import~ reads, so a file of
+bookmarks that left as JSON can be read back as the bookmarks file you edit.
 
 #+begin_src json
 {
@@ -285,6 +382,40 @@ The modern standard for data exchange. Browsers like Chromium store bookmarks in
 #+end_src
 
 
+----------------
+
+** XBEL format
+
+XBEL -- [[https://en.wikipedia.org/wiki/XML_Bookmark_Exchange_Language][XML Bookmark Exchange Language]] -- is the one format here that is a document
+rather than a transcription of somebody's screen: an ~<xbel>~ root holding
+~folder~ elements, a folder named by a ~<title>~ child and nesting by its own
+nesting, and a ~bookmark~ element carrying its address in ~href~, its name in a
+~<title>~ child, and the day it was added in ~added~.
+
+#+begin_src xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbel PUBLIC "+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://www.python.org/topics/xml/dtds/xbel-1.0.dtd">
+<xbel version="1.0">
+  <folder><title>Work</title>
+    <bookmark href="https://codeberg.org/jjba23" added="2025-01-22"><title>Codeberg</title></bookmark>
+    <folder><title>Ops</title>
+      <bookmark href="https://grafana.test-backend.nl"><title>Grafana</title></bookmark>
+    </folder>
+  </folder>
+  <bookmark href="https://mastodon.social"><title>Mastodon</title></bookmark>
+</xbel>
+#+end_src
+
+It is somewhat niche today, but still read by some open-source browsers (like
+Midori or Falkon) and bookmark managers.  A name is text and not markup, so a
+name holding an ampersand or an angle bracket is written escaped, and a reader of
+XML gets back the name it was.
+
+XBEL 1.0 has nowhere to keep tags, so a document written this way holds the
+folders, names, addresses and days of a bookmarks file and not its tags.  A file
+that needs everything is a file for ~json~ or ~scheme~.
+
+
 -------------
 
 * Licensing
@@ -325,27 +456,15 @@ In summary, we foster an inclusive, respectful, and cooperative environment for 
 
 * TODO
 
-*** Link Validation (Dead Link Checker)
-
-Add a command like lenkesamler check that iterates through the DSL, pings every URL, and flags HTTP 404s, 500s, or redirects.
-
 *** Formats that will futurely be supported
 
 Pretty HTML - The Netscape format seriously deviates from correct HTML. It could be useful to have a simple and a prettified (w/ CSS) valid HTML exporters.
-
-CSV - Comma-Separated Values. Good for basic spreadsheet viewing or importing into password managers that also track URLs (like Bitwarden or 1Password).
 
 SQLite - Browsers like Firefox (places.sqlite) and Safari use SQLite databases, worth investigating, and perhaps generating some ~INSERT~ statements.
 
 Nyxt web browser - Converting from Scheme to Common Lisp will be a pleasant little feature to add, which will help support the Nyxt web browser.
 
 OS Shortcuts .desktop (Linux), .url (Windows), .webloc (macOS) - We could have a mode that generates a directory tree on the filesystem populated with these shortcut files.
-
-XBEL (XML)XML Bookmark Exchange Language - An open XML standard created in the late 90s by the Python XML SIG.Somewhat niche today, but still supported by some open-source browsers (like Midori or Falkon) and bookmark managers.
-
-*** Import function
-
-What if a user wants to migrate to Lenkesamler? We should write a parser that takes a messy bookmarks.html file and spits out clean Guile Scheme (dir ... (url ...)) code and it would drastically lower the barrier to entry for new users.
 
 ---------------
 

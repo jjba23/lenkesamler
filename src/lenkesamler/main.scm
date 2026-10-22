@@ -19,19 +19,26 @@
   #:declarative? #f
   #:use-module (ice-9 getopt-long)
   #:use-module (ice-9 match)
+  #:use-module (ice-9 textual-ports)
   #:use-module (srfi srfi-13)
   #:use-module (lenkesamler renderer cli)
+  #:use-module (lenkesamler renderer csv)
   #:use-module (lenkesamler renderer org)
   #:use-module (lenkesamler renderer netscape)
   #:use-module (lenkesamler renderer json)
   #:use-module (lenkesamler renderer markdown)
+  #:use-module (lenkesamler renderer scheme)
+  #:use-module (lenkesamler renderer xbel)
+  #:use-module (lenkesamler importer)
+  #:use-module (lenkesamler checker)
   #:use-module (lenkesamler prelude)
   #:use-module (lenkesamler html)
   #:export (main bookmark-modes render-bookmarks write-document))
 
 ;; Every spelling a mode may be asked for by.
 (define bookmark-modes
-  '(cli json org markdown md commonmark netscape browser web))
+  '(cli csv json org markdown md commonmark netscape browser web scheme scm
+        xbel))
 
 ;; ====== Rendering ======
 
@@ -42,6 +49,7 @@ The document is the whole output of a run, so it is also the whole of what a
 destination file holds: nothing is written to a port here."
   (match mode
     ('cli (cli-bookmark-renderer bookmarks))
+    ('csv (csv-bookmark-renderer bookmarks))
     ('json (json-bookmark-renderer bookmarks))
     ('org (org-bookmark-renderer bookmarks))
     ((or 'markdown 'md 'commonmark) (markdown-bookmark-renderer bookmarks))
@@ -49,10 +57,12 @@ destination file holds: nothing is written to a port here."
      (with-output-to-string (lambda ()
                               (sxml->xml (netscape-bookmark-renderer
                                           bookmarks)))))
+    ((or 'scheme 'scm) (scheme-bookmark-renderer bookmarks))
+    ('xbel (xbel-bookmark-renderer bookmarks))
     (_ (error "lenkesamler: unknown output mode" mode
               "-- expected one of:" bookmark-modes))))
 
-;; ====== Writing the document ======
+;; ====== Writing what a run made ======
 
 (define (ensure-directory path)
   "Create PATH, and every directory above it, unless it is already there."
@@ -72,10 +82,26 @@ destination file holds: nothing is written to a port here."
   (ensure-directory (dirname destination))
   (call-with-output-file destination (lambda (port) (display document port))))
 
-;; ====== Reading the bookmarks file ======
+(define (emit text destination)
+  "TEXT, to the file DESTINATION when a run named one, and to the output otherwise.
 
-(define (bookmarks-file file)
-  "FILE as the absolute path of a bookmarks file, or a clear error.
+A run that names no destination writes what it made and nothing else: the
+document of a mode, or the report of a check, and not a word about the run
+around it."
+  (if destination
+      (begin
+        (write-document text destination)
+        (format (current-error-port) "lenkesamler: wrote ~a~%" destination))
+      (begin
+        (display text)
+        ;; A text that already ends its last line is not given a second one.
+        (unless (string-suffix? "\n" text)
+          (newline)))))
+
+;; ====== Reading the bookmarks ======
+
+(define* (existing-file file #:key (what "bookmarks file"))
+  "FILE as the absolute path of a file, or a clear error naming WHAT it is not.
 
 The path is resolved against the directory the program was started in.  Guile's
 `load' would otherwise resolve it against `%load-path', where a bookmarks file
@@ -84,7 +110,18 @@ The path is resolved against the directory the program was started in.  Guile's
                  (lambda (key . args) #f))))
     (if (and path (file-exists? path))
         path
-        (error "lenkesamler: no bookmarks file at" file))))
+        (error (format #f "lenkesamler: no ~a at" what) file))))
+
+(define (bookmarks-of-file file)
+  "The bookmarks FILE defines, FILE being a bookmarks file of this project."
+  (load (existing-file file))
+  (get-setting 'lenkesamler-bookmarks))
+
+(define (bookmarks-of-import file)
+  "The bookmarks FILE holds: a browser's bookmarks file, or this project's JSON."
+  (call-with-input-file (existing-file file #:what "file to import")
+    (lambda (port)
+      (bookmarks-of-import-text (get-string-all port)))))
 
 ;; ====== Entry point ======
 
@@ -94,44 +131,61 @@ The path is resolved against the directory the program was started in.  Guile's
                               (value #t))
                         (destination (single-char #\o)
                                      (value #t))
-                        (resources (single-char #\r)
-                                   (value #t))
                         (file (single-char #\p)
-                              (value #t)
-                              (required? #t))))
+                              (value #t))
+                        (import (single-char #\i)
+                                (value #t))
+                        (check (single-char #\c))))
          (options (getopt-long args option-spec))
-         (mode (string->symbol (option-ref options
-                                           'mode "netscape")))
+         (import-file (option-ref options
+                                  'import #f))
+         (check? (option-ref options
+                             'check #f))
+         (asked-mode (option-ref options
+                                 'mode #f))
+         (mode (string->symbol (or asked-mode
+                                   ;; Reading a browser's file is a migration:
+                                   ;; what is wanted back is the file a person
+                                   ;; edits, which is this project's own source.
+                                   (if import-file "scheme" "netscape"))))
          (file (option-ref options
                            'file #f))
          (destination (option-ref options
                                   'destination #f)))
-    ;; The report of the run goes to the error port: the standard output is the
-    ;; document, and a run whose output is redirected into a `.json' or a
-    ;; bookmarks file must hold that document and nothing else.  `--resources'
-    ;; is accepted for the wrapper script's sake; nothing is read from it yet.
+    (when (and file import-file)
+      (error "lenkesamler: a run reads one file" file import-file
+             "-- name --file or --import, not both"))
+    (unless (or file import-file)
+      (error "lenkesamler: no bookmarks to read"
+             "-- name a bookmarks file with --file, or a browser's bookmarks file with --import"))
+    (when (and check? asked-mode)
+      (error "lenkesamler: --check reports on the links of a file" asked-mode
+             "-- it writes no document, so it takes no --mode"))
+    ;; The report of the run goes to the error port: the standard output is what
+    ;; the run made, and a run whose output is redirected into a `.json' or a
+    ;; bookmarks file must hold that and nothing else.
     (format (current-error-port)
             "
 ---------------------------------------------------------
 Lenkesamler: Your bookmark manager and sync tool powered by Lisp
-    loading file: ~a
-    output mode: ~a
+    reading: ~a
+    ~a
 ---------------------------------------------------------
 "
-            file mode)
-    ;; --- Load user bookmarks file ---
-    (load (bookmarks-file file))
-    ;; --- Render bookmarks ---
-    (let ((document (render-bookmarks (get-setting 'lenkesamler-bookmarks)
-                                      mode)))
-      (if destination
-          (begin
-            (write-document document destination)
-            (format (current-error-port) "lenkesamler: wrote ~a~%" destination))
-          (begin
-            (display document)
-            ;; A document that already ends its last line is not given a second
-            ;; one: an empty line at the end of a Netscape file is harmless but
-            ;; one at the end of a Markdown file is not nothing either.
-            (unless (string-suffix? "\n" document)
-              (newline)))))))
+            (or import-file file)
+            (if check?
+                "checking every link"
+                (format #f "output mode: ~a" mode)))
+    ;; --- Load the bookmarks ---
+    (let ((bookmarks (if import-file
+                         (bookmarks-of-import import-file)
+                         (bookmarks-of-file file))))
+      ;; --- Write the document, or read the links ---
+      (if check?
+          (let ((checks (check-bookmarks bookmarks)))
+            (emit (check-report checks) destination)
+            ;; A file of links that no longer lead anywhere is a failure a
+            ;; pipeline is meant to hear about.
+            (when (checks-failed? checks)
+              (exit 1)))
+          (emit (render-bookmarks bookmarks mode) destination)))))
