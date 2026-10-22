@@ -2,66 +2,171 @@
 #+author: Josep Bigorra
 #+email: jjbigorra@gmail.com
 #+language: en
-#+options: toc:nil num:nil
+#+options: toc:1 num:nil
 
-[[https://jointhefreeworld.org/ggg/dist/scheme-guile.svg]] [[https://jointhefreeworld.org/ggg/dist/gnu-guix.svg]]   [[https://jointhefreeworld.org/ggg/dist/maak.svg]]
-[[https://jointhefreeworld.org/ggg/dist/license-agpl3+.svg]]    [[https://jointhefreeworld.org/ggg/dist/license-fdl13+.svg]]
+[[https://jointhefreeworld.org/ggg/dist/scheme-guile.svg]] [[https://jointhefreeworld.org/ggg/dist/gnu-guix.svg]] [[https://jointhefreeworld.org/ggg/dist/maak.svg]] [[https://jointhefreeworld.org/ggg/dist/license-agpl3+.svg]] [[https://jointhefreeworld.org/ggg/dist/license-fdl13+.svg]]
 
-Lenkesamler (Norwegian for "link collector") is your ultimate bookmark manager, syncing tool, and digital archive. Bookmarking for the next 50 years.
+*Lenkesamler* (Norwegian for "link collector") is a bookmark manager, sync tool
+and digital archive: you keep your bookmarks in *one Scheme file*, and it writes
+them out as the file a browser imports, as Markdown, Org, CSV, JSON or XBEL -- or
+as a clean listing right in your terminal.
 
-If you like my work, please support me by [[https://bmc.link/jjbigorra][buying me a cup of coffee ☕]] so I can continue with a lot of motivation.
+*Bookmarking for the next 50 years.*
 
----------------
+[[file:assets/lenkesamler-demo.gif]]
 
-Lenkesamler lets you define your bookmarks in the most extremely expressive, powerful, reliable and eternal way, in code
+/One bookmarks file, three documents: the terminal listing, the bookmarks file Firefox imports, and an Org document./
 
-With the world's most flexible programming language, Lisp (Guile Scheme)
+* Why this exists
 
-Your knowledge base can be translated between this "central bookmark definition" in Lisp (S-expressions, guile records, functions, lambdas, etc), into many other formats and outputs, including browser bookmarks (to import in Firefox, Chromium, etc.), CLI output, Org mode document, JSON and more.
+Browsers come and go. Syncing services shut down, change their pricing, or pivot
+to new business models. But your curated bookmarks and knowledge? They are your
+personal library, your second brain, and your map of the web.
 
-See an example of bookmark file (Lisp) here: [[file:bookmarks/joe.scm]]
+You shouldn't be locked into one tool or browser. Lenkesamler is built with a
+"next 50-years mindset": your bookmarks are a *program you own*, in a language
+that will still run when the current browser is a footnote.
 
-The project is built primarily with Guix (though you may use the code as you please) and automation is done with [[https://codeberg.org/jjba23/maak][Maak]] , check the ~maak.scm~ file.
-Maak is very recommended, but not necessary, all you need is the Guix package manager installed, and then you can run the program easily. But feel free to use the Scheme code at will.
+By treating bookmarks as pure, programmable data rather than a hidden database
+inside a specific browser, you guarantee that *your knowledge base will outlive
+the software used to view them*. Define your bookmarks once, and let Lenkesamler
+translate them into whatever format you need today, or whatever format gets
+invented tomorrow.
+
+* Features
+
+- *One file, every format.* A single ~.scm~ file becomes a browser's bookmarks
+  file, Markdown, Org, CSV, JSON, XBEL, or a terminal listing -- with the same
+  folders, names and days, and with the tags wherever the format has room for
+  them.
+- *Bookmarks are code.* Folders are values, links are records, and the whole
+  file is Guile Scheme: loop over your environments, read an API, compute a
+  name, or ~load~ another file. No DSL to fight, no menu to click.
+- *Migration in both directions.* ~--import~ reads the bookmarks file a browser
+  exports (Firefox, Chromium, Safari, Edge) and writes it as the bookmarks file
+  this program reads. It also reads back the JSON this program writes.
+- *A dead-link checker.* ~--check~ asks every link what it answers now and says
+  which ones are gone, which have moved, and which were never pages -- and exits
+  non-zero when something is broken, so a pipeline can watch your file.
+- *Local-first by design.* No account, no service, no database, no telemetry.
+  One text file and one command.
+- *Reproducible.* Written for GNU Guix; the development shell, the tests and the
+  package are the same on every machine.
+- *Free software, forever.* AGPL-3.0-or-later for the code, FDL-1.3-or-later for
+  this document.
+
+* Getting started
+
+** Requirements
+
+- [[https://guix.gnu.org/][GNU Guix]] (any recent version). The commands below use it, and it is how this
+  project is developed and tested.
+- Or: Guile 3.0 with [[https://github.com/aconchillo/guile-json][guile-json]] 4, if you would rather run the Scheme
+  directly. Everything in the program is plain Guile.
+- Nothing else. No database, no server, no account.
+
+** Install with Guix
+
+#+begin_src shell
+git clone https://codeberg.org/jjba23/lenkesamler
+cd lenkesamler
+guix package -f ./guix.scm
+lenkesamler --help
+#+end_src
+
+The GNU Guix package manager installs ~lenkesamler~ into your profile, along with
+the Guile sources and the wrapper script that makes the program feel like any
+other command-line tool.
+
+If you would rather not install anything, run it straight out of the checkout:
+
+#+begin_src shell
+guix shell -f ./guix.scm -- lenkesamler --file ./bookmarks/joe.scm --mode cli
+#+end_src
+
+And to be exact about the Guix revision this project is developed against -- the
+one pinned in ~channels.scm~ -- use ~guix time-machine~:
+
 #+begin_src shell
 guix time-machine --channels=channels.scm -- shell -f guix.scm -- \
-     lenkesamler --file ./bookmarks/joe.scm --destination ./bookmarks-export.html --mode md
+     lenkesamler --file ./bookmarks/joe.scm --mode md
 #+end_src
 
-The document is written to the file ~--destination~ names, or to the standard
-output when no destination is named -- which is what makes
-~lenkesamler ... --mode json | jq .~ a run of lenkesamler.  What the run says
-about itself goes to the error port, so it never lands in the document.
+** Your first run
 
-The test suite is the specs under ~test/veritas/unit~, written with
-[[https://codeberg.org/jjba23/veritas][Veritas]].  Run all of them with:
+Look at the example bookmarks file, ~bookmarks/joe.scm~, and write your own next
+to it -- or edit it in place, it is just a Scheme file.
+
+See what you have, in the terminal:
 
 #+begin_src shell
-maak test
+lenkesamler --file ./bookmarks/joe.scm --mode cli
 #+end_src
 
----------------
+Write the bookmarks file your browser imports, and open it in your browser:
 
-Browsers come and go. Syncing services shut down, change their pricing, or pivot to new business models. But your curated bookmarks and knowledge? They are your personal library, your second brain, and your map of the web.
+#+begin_src shell
+lenkesamler --file ./bookmarks/joe.scm --destination ./bookmarks.html
+#+end_src
 
-You shouldn't be locked into one tool or browser. Lenkesamler is built with a "next 50-years mindset."
+That is the whole workflow. Everything else on this page is a choice of format:
+add ~--mode markdown~, ~--mode org~, ~--mode csv~, ~--mode json~, ~--mode xbel~,
+or ~--mode scheme~ to the same command.
 
+** The development shell
 
---------------
+Everything the project itself uses -- Guile, guile-json, the [[https://codeberg.org/jjba23/veritas][Veritas]] test
+framework, GnuTLS for checking ~https~ links, [[https://codeberg.org/jjba23/maak][Maak]] for the task list -- is in
+~manifest.scm~:
 
-** About Lisp, the DSL, the Prelude and
+#+begin_src shell
+guix shell -m manifest.scm
+#+end_src
 
-Unlike static formats like JSON or YAML, Lenkesamler lets you define your bookmarks using a full and flexible programming language: Lisp (Guile Scheme).
+Inside that shell you can run the program from source:
 
-Why Lisp? Because it provides infinite power. You aren't just writing a list; you're writing a program. This means you have functions, calculations, API calls, recursive nesting, macros, and endless extensibility out of the box.
+#+begin_src shell
+guile -L ./src -c '((@ (lenkesamler main) main))' \
+      --file ./bookmarks/joe.scm --mode cli
+#+end_src
 
-To write your own bookmarks simply write some Guile Scheme code as shown below in a called file: ~bookmarks.scm~  or ~whatever.scm~ with your bookmark /program/
+or through Maak, which is how this project is developed:
 
-lenkesamler will scan for a variable of type list, with the name of ~lenkesamler-bookmarks~ to load bookmarks from
+#+begin_src shell
+maak dev-run   # render ./bookmarks/joe.scm to ./bookmarks-export.html
+maak run       # the same, with the installed lenkesamler command
+maak test      # the whole test suite
+#+end_src
 
-keywords of the DSL:
-- ~dir~
-- ~url~
+** Without Guix
+
+The program is plain Guile 3.0 plus guile-json 4. Put the sources on the load
+path and call ~main~:
+
+#+begin_src shell
+guile -L ./src -c '((@ (lenkesamler main) main))' \
+      --file ./bookmarks/joe.scm --mode netscape --destination bookmarks.html
+#+end_src
+
+The wrapper in ~scripts/lenkesamler~ is a small bash script: it prints the help
+text from ~resources/help.txt~ and passes your options through to that same entry
+point, so an installed copy behaves exactly like a run from source.
+
+* Your bookmarks file, and its DSL
+
+Unlike static formats like JSON or YAML, Lenkesamler lets you define your
+bookmarks using a full and flexible programming language: Lisp (Guile Scheme).
+
+Why Lisp? Because it provides infinite power. You aren't just writing a list;
+you're writing a program. This means you have functions, calculations, API calls,
+recursive nesting, macros, and endless extensibility out of the box.
+
+To write your own bookmarks, write some Guile Scheme code in a file called
+~bookmarks.scm~ -- or ~whatever.scm~ -- with your bookmark /program/:
+
+Lenkesamler scans for a variable of type list, named ~lenkesamler-bookmarks~, to
+load bookmarks from. The file must define the module ~(lenkesamler bookmarks)~
+and use this project's prelude, which is where ~dir~ and ~url~ live.
 
 #+begin_src scheme
 (define-module (lenkesamler bookmarks)
@@ -77,7 +182,7 @@ keywords of the DSL:
                   (url "grafana.prod-backend.nl"
                        ;; run Scheme code, feel free to
                        ;; make everything dynamic
-                       #:name (make-string (+ 20 4 5 (- 90 7)) #\k))
+                       #:name (make-string (+ 20 4 5 (- 90 7)) #\k)))
              (dir "Ops T"
                   (url "grafana.test-backend.nl"
                        #:name "Grafana"))))
@@ -86,13 +191,30 @@ keywords of the DSL:
         (list work-dir
               (url "codeberg.org/jjba23"
                    #:name "Codeberg")))
-
 #+end_src
 
- Also modularizing your bookmarks becomes trivial as you can even split into multiple files and ~(load "my-other-bookmarks.scm")~
+The DSL is two forms and a few keywords:
 
- You can also easily do dynamic things:
- #+begin_src scheme
+| Form                   | What it makes                                                                 |
+|------------------------+-------------------------------------------------------------------------------|
+| ~(dir "Work" ...)~     | A folder. It holds links and other folders, as deep as you like.              |
+| ~(url "example.org")~  | A bookmark. Written without a name, it is called by its address.              |
+| ~#:name "Codeberg"~    | What the bookmark is called.                                                  |
+| ~#:added "2025-01-22"~ | The day you saved it, written as ~YYYY-MM-DD~.                                |
+| ~#:tags '(dev lisp)~   | A list of symbols. Kept by the terminal, CSV, JSON, Scheme and browser files. |
+
+Note that a link is written the way you would say it: ~codeberg.org/jjba23~ is
+reached over ~https://~, while ~mailto:post@example.org~ and ~ftp:~ links keep
+the scheme they name.
+
+** Bookmarks are a program
+
+Modularising your bookmarks becomes trivial: you can split them into multiple
+files and ~(load "my-other-bookmarks.scm")~.
+
+You can also easily do dynamic things:
+
+#+begin_src scheme
 (map (lambda (k)
        (dir (format #f "Ops ~a" k)
             (url (format #f "grafana.~a-backend.nl" k)
@@ -100,17 +222,48 @@ keywords of the DSL:
             (url (format #f "argocd.~a-backend.nl" k)
                  #:name "ArgoCD")))
      '(prod test acce))
- #+end_src
+#+end_src
 
--------------
+That list of folders is a folder's worth of bookmarks: the renderers read it as
+if you had written each one out.
 
-Need to generate bookmarks from an API? Write a function. Need to output to a weird, undocumented (or god forbid proprietary) format 10 years from now? Write a custom exporter in a few lines of Lisp.
+Need to generate bookmarks from an API? Write a function. Need to output to a
+weird, undocumented (or god forbid proprietary) format 10 years from now? Write a
+custom exporter in a few lines of Lisp.
 
-The lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile Scheme) allowing for infinite power, recursive nesting and endless extensibility.
+The Lenkesamler DSL is flexible and powerful, and based on simple Lisp (Guile
+Scheme) allowing for infinite power, recursive nesting and endless extensibility.
 
-** Operation modes
+* Command-line reference
+
+| Option                     | What it does                                                                                |
+|----------------------------+---------------------------------------------------------------------------------------------|
+| ~-f~, ~--file FILE~        | Read a bookmarks file (this project's Scheme DSL).                                          |
+| ~-i~, ~--import FILE~      | Read a bookmarks file from somewhere else: a browser's export, or this project's JSON.      |
+| ~-m~, ~--mode MODE~        | What to write. Defaults to ~netscape~, or to ~scheme~ when a run imports.                   |
+| ~-d~, ~--destination FILE~ | Write the document to FILE instead of the standard output; the directory is made if needed. |
+| ~-c~, ~--check~            | Check every link of the file instead of writing a document.                                 |
+| ~-h~, ~--help~             | Show the help text and exit.                                                                |
+
+A run reads exactly one file: ~--file~ or ~--import~, not both.
+
+Every option can also be written out long -- ~--mode json~, ~--check~ -- which
+is what the rest of this document does; the short forms above are the ones the
+installed command accepts.
+
+The document is written to the file ~--destination~ names, or to the standard
+output when no destination is named -- which is what makes
+~lenkesamler ... --mode json | jq .~ a run of lenkesamler. What the run says about
+itself goes to the error port, so it never lands in the document:
+
+#+begin_src shell
+lenkesamler --file ./bookmarks/joe.scm --mode json | jq '.bookmarks[0].name'
+#+end_src
+
+* Operation modes
 
 Supported modes of operation are:
+
 - ~cli~: Command-line / TUI format
 - ~csv~: Comma-separated values, a row per bookmark
 - ~json~: JSON format
@@ -120,14 +273,13 @@ Supported modes of operation are:
 - ~scheme~ / ~scm~ : a bookmarks file, written back as the code you edit
 - ~xbel~ : XML Bookmark Exchange Language
 
-The default mode is ~netscape~
+The default mode is ~netscape~.
 
 [[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]
 
+* Formats
 
---------------
-
-** CLI Format
+** CLI
 
 A simple way to visualize a bookmarks file, right from your terminal.
 
@@ -138,26 +290,28 @@ A simple way to visualize a bookmarks file, right from your terminal.
 
 [Work]
     Slack | https://app.slack.com/client/ET1XNW2SF5/C08UHE7KM99
+    Codeberg added: 2025-01-22  dev  | https://codeberg.org/jjba23
 
     [Ops T]
         Grafana | https://grafana.test-backend.nl
 
 WhatsApp | https://web.whatsapp.com/
 Mastodon | https://mastodon.social
-Codeberg | https://codeberg.org/jjba23
 #+end_example
 
----------------
+** Browser bookmark file (Netscape)
 
-** Browser Bookmark File Format
+Netscape legacy -- most web browsers still use it.
 
-Netscape legacy - most web browsers still use it.
+The archaic *Netscape Bookmark Format* is a universally recognized, HTML-based
+file format used by almost all modern web browsers (like Chrome, Firefox, Safari,
+and Edge) to import and export bookmarks.
 
-The archaic *Netscape Bookmark Format* is a universally recognized, HTML-based file format used by almost all modern web browsers (like Chrome, Firefox, Safari, and Edge) to import and export bookmarks.
+This format is the definition of "legacy" in software. It is built on weird
+non-compliant, semi-valid HTML from the 1990's.
 
-This format is the definition of "legacy" in software. It is built on weird non-compliant, semi-valid HTML from the 1990's.
-
-Lenkesamler writes this messy standard perfectly so your browser doesn't have to guess.
+Lenkesamler writes this messy standard perfectly so your browser doesn't have to
+guess.
 
 The format uses basic HTML tags to organize links and folder hierarchies:
 
@@ -181,109 +335,39 @@ The format uses basic HTML tags to organize links and folder hierarchies:
 </DL><p>
 #+end_src
 
---------------
+A name is written as text and not as markup: a bookmark called ~R&D <notes>~ is
+escaped, so the browser shows the name you gave it.
 
-** Importing
+** Org mode
 
-Migration is the other direction of the same files. ~--import~ reads a
-bookmarks file from somewhere else -- the browser format above, read instead of
-written -- and writes it as the bookmarks file this program reads:
+A killer-feature for anyone who uses this amazing Emacs mode 🐂.
 
-#+begin_src shell
-lenkesamler --import ./bookmarks-from-firefox.html \
-            --destination ./bookmarks/joe.scm
-#+end_src
-
-The mode of such a run is ~scheme~ unless ~-m~ names another, so
-~--import ... --mode csv~ is a sheet of the bookmarks the browser had. The
-folders, the names, the addresses, the day a bookmark was added and the tags
-Firefox keeps with one are all kept; what a browser keeps of its own -- its
-icons, its cached charsets -- is dropped, because it is not a bookmark.
-
-What this program writes as ~json~ is read back the same way, so a document
-that was piped into another program can come home again:
-
-#+begin_src shell
-lenkesamler --file ./bookmarks/joe.scm --mode json > joe.json
-lenkesamler --import joe.json --destination ./bookmarks/joe.scm
-#+end_src
-
-The two kinds of file are told apart by what they hold and not by their names:
-a JSON document begins with an object or a list, and a browser's file is the
-rest.  A file called ~bookmarks.html~ that holds JSON is read as JSON, because a
-file is worth migrating whatever it was called.
-
-A link your file writes without a scheme comes back with one
-(~https://codeberg.org/jjba23~), because a JSON document says the address a
-bookmark leads to and not the shorthand you typed next to it.  The folders, the
-names, the days and the tags are the ones the document held.
-
---------------
-
-** Checking the links
-
-A bookmarks file is a promise about addresses, and the addresses are the part of
-it that somebody else can break.  ~--check~ asks every one of them what it
-answers now:
-
-#+begin_src shell
-lenkesamler --file ./bookmarks/joe.scm --check
-#+end_src
+With Lenkesamler you can easily generate pretty Org mode documents (which further
+can be converted easily via Emacs as well to PDF, LaTEX, HTML, etc.).
 
 #+begin_example
-checked 3 links
-ok       https://codeberg.org/jjba23 (200)
-moved    https://mastodon.social (301 -> https://mastodon.social/home)
-broken   https://grafana.test-backend.nl (404)
-1 ok, 1 moved, 1 broken, 0 error, 0 skipped
+  * jointhefreeworld
+  - [[https://jointhefreeworld.org][jointhefreeworld.org]]
+  - [[https://wikimusic.jointhefreeworld.org][WikiMusic]]
+
+  * Work
+
+  - [[https://app.slack.com/client/T1XNW2SF5/C08UHE7KM99][Slack]]
+
+  ** Documents
+  - [[https://vandebron.atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards][🌐 REST standards]]
+
+  * Dev
+  - [[https://www.iankduncan.com/engineering/2026-02-09-what-functional-programmers-get-wrong-about-systems/][What functional programmers get wrong about systems]]
 #+end_example
 
-A link that answers is ~ok~; one that answers with a redirect is ~moved~ and is
-not a failure, because the bookmark still leads somewhere; one that answers with
-a refusal (a 404, a 500) is ~broken~; and one that does not answer at all -- no
-DNS, no connection, a server that hangs up -- is ~error~.  A run with a ~broken~
-or an ~error~ link exits non-zero, so a pipeline can watch a bookmarks file.
+The lines are indented here only so that this document stays a document: in the
+file Lenkesamler writes, every heading starts at the first column.
 
-What is asked is a ~HEAD~ request -- the status of a page without the page -- and
-a server that does not allow one (405 or 501) is asked for the page itself.  An
-address that is not a page is not a broken link: a ~mailto:~ address, a
-~magnet:~ link and the like are reported as ~skipped~ and are not a failure.
+** Markdown
 
-The report goes where the document of a mode would go: to the standard output,
-or to ~--destination~ when a run names one.  A run that checks writes no
-document, so it takes no ~--mode~.
-
---------------
-
-** Org mode format
-
-A killer-feature for anyone that uses this amazing Emacs mode 🐂.
-
-With lenkesamler you can easily generate pretty Org mode documents (which further can be converted easily via Emacs as well to PDF, LaTEX, HTML, etc.).
-
-#+begin_example
-* jointhefreeworld
-- [[https://jointhefreeworld.org][jointhefreeworld.org]]
-- [[https://wikimusic.jointhefreeworld.org][WikiMusic]]
-
-* Work
-
-- [[https://app.slack.com/client/T1XNW2SF5/C08UHE7KM99][Slack]]
-
-** Documents
-- [[https://vandebron.atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards][🌐 REST standards]]
-
-* Dev
-- [[https://www.iankduncan.com/engineering/2026-02-09-what-functional-programmers-get-wrong-about-systems/][What functional programmers get wrong about systems]]
-#+end_example
-
-
-
------------------
-
-** Markdown  format
-
-The popular plain-text format used by modern note-taking apps (Obsidian, Logseq, Notion, GitHub, etc)
+The popular plain-text format used by modern note-taking apps (Obsidian, Logseq,
+Notion, GitHub, etc).
 
 #+begin_example
 # Work
@@ -297,9 +381,7 @@ The popular plain-text format used by modern note-taking apps (Obsidian, Logseq,
 - [🌐 REST standards](https://atlassian.net/wiki/spaces/DIG/pages/95583095586887/REST+standards)
 #+end_example
 
-----------------
-
-** CSV format
+** CSV
 
 A spreadsheet. One row per bookmark, and the folders a bookmark was written in
 carried in the ~folder~ column, outermost first -- empty for a bookmark of the
@@ -316,14 +398,11 @@ dev/Articles,What functional programmers get wrong,https://www.iankduncan.com/en
 ,Mastodon,https://mastodon.social,,
 #+end_example
 
-----------------
+** JSON
 
-** JSON format
-
-The modern standard for data exchange. Browsers like Chromium store bookmarks internally as JSON. High Priority. Essential for programmatic use, API integrations, or piping Lenkesamler output into other CLI tools like jq.
-
-This document is also one of the two kinds of file ~--import~ reads, so a file of
-bookmarks that left as JSON can be read back as the bookmarks file you edit.
+The modern standard for data exchange. Browsers like Chromium store bookmarks
+internally as JSON. High priority: essential for programmatic use, API
+integrations, or piping Lenkesamler output into other CLI tools like ~jq~.
 
 #+begin_src json
 {
@@ -351,29 +430,6 @@ bookmarks that left as JSON can be read back as the bookmarks file you edit.
               ]
             }
           ]
-        },
-        {
-          "name": "Ops T",
-          "items": [
-            {
-              "link": "grafana.test-backend.nl",
-              "name": "Grafana",
-              "added": false
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Emacs",
-      "items": [
-        {
-          "link": "www.gnu.org/software/emacs/manual/html_mono/calc.html",
-          "name": "Calc Manual",
-          "added": false,
-          "tags": [
-            "calc"
-          ]
         }
       ]
     }
@@ -381,16 +437,17 @@ bookmarks that left as JSON can be read back as the bookmarks file you edit.
 }
 #+end_src
 
+A link with no day says ~false~ rather than an invented date, and a folder is an
+~items~ list. This is also one of the two kinds of file ~--import~ reads, so a
+document that left as JSON can come home again.
 
-----------------
+** XBEL
 
-** XBEL format
-
-XBEL -- [[https://en.wikipedia.org/wiki/XML_Bookmark_Exchange_Language][XML Bookmark Exchange Language]] -- is the one format here that is a document
-rather than a transcription of somebody's screen: an ~<xbel>~ root holding
-~folder~ elements, a folder named by a ~<title>~ child and nesting by its own
-nesting, and a ~bookmark~ element carrying its address in ~href~, its name in a
-~<title>~ child, and the day it was added in ~added~.
+XBEL -- [[https://en.wikipedia.org/wiki/XML_Bookmark_Exchange_Language][XML Bookmark Exchange Language]] -- is the one format here that is a
+document rather than a transcription of somebody's screen: an ~<xbel>~ root
+holding ~folder~ elements, a folder named by a ~<title>~ child and nesting by its
+own nesting, and a ~bookmark~ element carrying its address in ~href~, its name in
+a ~<title>~ child, and the day it was added in ~added~.
 
 #+begin_src xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -407,78 +464,221 @@ nesting, and a ~bookmark~ element carrying its address in ~href~, its name in a
 #+end_src
 
 It is somewhat niche today, but still read by some open-source browsers (like
-Midori or Falkon) and bookmark managers.  A name is text and not markup, so a
-name holding an ampersand or an angle bracket is written escaped, and a reader of
-XML gets back the name it was.
+Midori or Falkon) and bookmark managers. A name is text and not markup, so a name
+holding an ampersand or an angle bracket is written escaped, and a reader of XML
+gets back the name it was.
 
 XBEL 1.0 has nowhere to keep tags, so a document written this way holds the
-folders, names, addresses and days of a bookmarks file and not its tags.  A file
+folders, names, addresses and days of a bookmarks file and not its tags. A file
 that needs everything is a file for ~json~ or ~scheme~.
 
+* Importing: migrating from a browser
 
--------------
+Migration is the other direction of the same files. ~--import~ reads a bookmarks
+file from somewhere else -- the browser format above, read instead of written --
+and writes it as the bookmarks file this program reads:
 
-* Licensing
+#+begin_src shell
+lenkesamler --import ./bookmarks-from-firefox.html \
+            --destination ./bookmarks/joe.scm
+#+end_src
 
-lenkesamler and all of its source code are free software, licensed under the GNU Affero General Public License v3 (or newer at your convenience).
+The mode of such a run is ~scheme~ unless ~-m~ names another, so
+~--import ... --mode csv~ is a sheet of the bookmarks the browser had. The
+folders, the names, the addresses, the day a bookmark was added and the tags
+Firefox keeps with one are all kept; what a browser keeps of its own -- its icons,
+its cached charsets -- is dropped, because it is not a bookmark.
+
+What this program writes as ~json~ is read back the same way, so a document that
+was piped into another program can come home again:
+
+#+begin_src shell
+lenkesamler --file ./bookmarks/joe.scm --mode json > joe.json
+lenkesamler --import joe.json --destination ./bookmarks/joe.scm
+#+end_src
+
+The two kinds of file are told apart by what they hold and not by their names: a
+JSON document begins with an object or a list, and a browser's file is the rest.
+A file called ~bookmarks.html~ that holds JSON is read as JSON, because a file is
+worth migrating whatever it was called.
+
+A link your file writes without a scheme comes back with one
+(~https://codeberg.org/jjba23~), because a JSON document says the address a
+bookmark leads to and not the shorthand you typed next to it. The folders, the
+names, the days and the tags are the ones the document held.
+
+* Checking the links
+
+A bookmarks file is a promise about addresses, and the addresses are the part of
+it that somebody else can break. ~--check~ asks every one of them what it answers
+now:
+
+#+begin_src shell
+lenkesamler --file ./bookmarks/joe.scm --check
+#+end_src
+
+#+begin_example
+checked 3 links
+ok       https://codeberg.org/jjba23 (200)
+moved    https://mastodon.social (301 -> https://mastodon.social/home)
+broken   https://grafana.test-backend.nl (404)
+1 ok, 1 moved, 1 broken, 0 error, 0 skipped
+#+end_example
+
+A link that answers is ~ok~; one that answers with a redirect is ~moved~ and is
+not a failure, because the bookmark still leads somewhere; one that answers with
+a refusal (a 404, a 500) is ~broken~; and one that does not answer at all -- no
+DNS, no connection, a server that hangs up -- is ~error~. A run with a ~broken~ or
+an ~error~ link exits non-zero, so a pipeline can watch a bookmarks file.
+
+What is asked is a ~HEAD~ request -- the status of a page without the page -- and
+a server that does not allow one (405 or 501) is asked for the page itself. An
+address that is not a page is not a broken link: a ~mailto:~ address, a
+~magnet:~ link and the like are reported as ~skipped~ and are not a failure.
+
+Each address is asked once, even when two folders hold the same page, and folders
+are walked all the way down. The report goes where the document of a mode would
+go: to the standard output, or to ~--destination~ when a run names one. A run that
+checks writes no document, so it takes no ~--mode~.
+
+* Development
+
+** Project layout
+
+| Path                          | What lives there                                                                                   |
+|-------------------------------+----------------------------------------------------------------------------------------------------|
+| ~src/lenkesamler/main.scm~    | Option parsing, reading a file, writing the document.                                              |
+| ~src/lenkesamler/prelude.scm~ | The DSL: ~dir~, ~url~, the records, ~get-setting~.                                                 |
+| ~src/lenkesamler/renderer/~   | One module per output mode: ~cli~, ~csv~, ~json~, ~markdown~, ~netscape~, ~org~, ~scheme~, ~xbel~. |
+| ~src/lenkesamler/importer/~   | Readers for files from elsewhere: a browser's export, JSON.                                        |
+| ~src/lenkesamler/checker.scm~ | The link checker and its report.                                                                   |
+| ~src/lenkesamler/html.scm~    | The SXML writer used by the browser file and XBEL.                                                 |
+| ~test/veritas/unit/~          | The test suite, one spec per module.                                                               |
+| ~bookmarks/joe.scm~           | A real bookmarks file, used by the specs and the demo.                                             |
+| ~resources/help.txt~          | What ~--help~ prints.                                                                              |
+| ~scripts/lenkesamler~         | The installed wrapper script.                                                                      |
+| ~maak.scm~                    | Tasks: ~test~, ~dev-run~, ~run~, ~fmt~, ~docs~, ~repl~, ~dev~.                                     |
+
+** Maak tasks
+
+[[https://codeberg.org/jjba23/maak][Maak]] organises the development loop. Run it inside ~guix shell -m manifest.scm~,
+or as ~guix shell -m manifest.scm -- maak TASK~.
+
+| Task                  | What it does                                                           |
+|-----------------------+------------------------------------------------------------------------|
+| ~maak test~           | Run the whole test suite.                                              |
+| ~maak dev-run~        | Render ~./bookmarks/joe.scm~ to ~./bookmarks-export.html~ from source. |
+| ~maak run~            | The same, using the installed ~lenkesamler~ command.                   |
+| ~maak fmt~            | Format every Scheme file the way Guix formats its own.                 |
+| ~maak docs~           | Build the API documentation in ~doc/~.                                 |
+| ~maak repl~           | A Guile REPL with the project on the load path (nREPL).                |
+| ~maak dev~            | Re-render on every save (~watchexec~).                                 |
+| ~maak package-docker~ | Build a Docker image with ~guix pack~.                                 |
+
+** Tests
+
+The test suite is written with [[https://codeberg.org/jjba23/veritas][Veritas]], a testing framework for Guile with a
+legible, embedded DSL. There is one spec per module under ~test/veritas/unit~:
+the DSL and the prelude, every renderer, both importers, the checker, the HTML
+writer, and a spec that runs the program itself -- over a real bookmarks file --
+and reads both the file ~--destination~ writes and the standard output it prints.
+
+#+begin_src shell
+maak test
+#+end_src
+
+A spec reads what a function *makes*, not what it happens to print: the XBEL
+spec hands its document to an XML parser, the JSON spec reads its document back
+as data, the Scheme spec loads the file it wrote, and the checker spec gives the
+check its answers instead of asking the internet whether a page is still up.
+
+** Continuous integration
+
+Every push to ~trunk~ submits a job to [[https://byggsteg.jointhefreeworld.org][Byggsteg]] from Woodpecker
+(~.woodpecker/byggsteg.yaml~). The job runs ~maak-test~ and then ~maak-deploy~,
+one task after the other: a commit whose tests fail is never deployed, and the
+build reports the failure.
+
+* Contributing
+
+You are warmly welcome here -- bug reports, patches, documentation, a new
+renderer, a better sentence in this README. Small contributions are as welcome as
+large ones, and "I tried it and this was confusing" is a genuinely useful bug
+report.
+
+- *Found a bug?* Open an issue on [[https://codeberg.org/jjba23/lenkesamler/issues][Codeberg]]. Say what you ran, what you
+  expected, and what happened instead; a bookmarks file that reproduces it is
+  worth a thousand words.
+- *Have a patch?* Send a pull request on Codeberg. Keep the diff focused, run
+  ~maak test~ and ~maak fmt~ first, and add a spec for the behaviour you changed
+  -- the suite is the contract, and a bug fixed without a spec comes back.
+- *Writing a renderer?* Look at ~src/lenkesamler/renderer/csv.scm~ for the
+  smallest one and ~xbel.scm~ for one that builds a document. Register the mode in
+  ~main.scm~, add a spec, and say what the format can and cannot keep.
+- *Not sure where to start?* The TODO list below is a good place, and asking is
+  always fine.
+
+This project adheres to the [[https://jointhefreeworld.org/blog/articles/personal/jointhefreeworld-code-of-conduct/index.html][jointhefreeworld code of conduct]]. In summary, we
+foster an inclusive, respectful, and cooperative environment for all contributors
+to this free software project. Inspired by the ideals of the GNU Project, we
+strive to uphold freedom, equality, and community as guiding principles. We
+believe that collaboration in a community of mutual respect is essential to
+creating excellent free software.
+
+* License
+
+Lenkesamler and all of its source code are free software, licensed under the GNU
+Affero General Public License v3 (or newer at your convenience).
 
 https://www.gnu.org/licenses/agpl-3.0.html
 
-The documentation and examples, including this document, which are provided with lenkesamler, are all licensed under the GNU Free Documentation License v1.3 (or newer at your convenience).
+The documentation and examples, including this document, which are provided with
+Lenkesamler, are all licensed under the GNU Free Documentation License v1.3 (or
+newer at your convenience).
 
 https://www.gnu.org/licenses/fdl-1.3.html
 
-
-----------
-
-* AI Policy
+* AI policy
 
 This project adheres to the [[https://jointhefreeworld.org/blog/articles/personal/jointhefreeworld-ai-policy/index.html][jointhefreeworld AI (Artificial Intelligence) policy]].
 
-Our core principle is simple: *AI should assist human creativity and problem-solving, never replace human reasoning.*
+Our core principle is simple: *AI should assist human creativity and
+problem-solving, never replace human reasoning.*
 
-While tools like Large Language Models (LLMs) and interactive chatbots can be beneficial for reviewing, refactoring small functions, or acting as a sounding board, they should be used with moderation.
+While tools like Large Language Models (LLMs) and interactive chatbots can be
+beneficial for reviewing, refactoring small functions, or acting as a sounding
+board, they should be used with moderation.
 
-We require a human in the loop for all contributions. The use of autonomous AI agents to automatically generate and submit pull requests to this project is strictly prohibited.
+We require a human in the loop for all contributions. The use of autonomous AI
+agents to automatically generate and submit pull requests to this project is
+strictly prohibited.
 
+* TODO: formats that will futurely be supported
 
------------------
-
-* Code of conduct
-
-This project adheres to the jointhefreeworld code of conduct. Find it here:
-
-https://jointhefreeworld.org/blog/articles/personal/jointhefreeworld-code-of-conduct/index.html
-
-In summary, we foster an inclusive, respectful, and cooperative environment for all contributors and users of this free software project. Inspired by the ideals of the GNU Project, we strive to uphold freedom, equality, and community as guiding principles. We believe that collaboration in a community of mutual respect is essential to creating excellent free software.
-
----------
-
-* TODO
-
-*** Formats that will futurely be supported
-
-Pretty HTML - The Netscape format seriously deviates from correct HTML. It could be useful to have a simple and a prettified (w/ CSS) valid HTML exporters.
-
-SQLite - Browsers like Firefox (places.sqlite) and Safari use SQLite databases, worth investigating, and perhaps generating some ~INSERT~ statements.
-
-Nyxt web browser - Converting from Scheme to Common Lisp will be a pleasant little feature to add, which will help support the Nyxt web browser.
-
-OS Shortcuts .desktop (Linux), .url (Windows), .webloc (macOS) - We could have a mode that generates a directory tree on the filesystem populated with these shortcut files.
-
----------------
+- *Pretty HTML* -- The Netscape format seriously deviates from correct HTML. It
+  could be useful to have a simple and a prettified (w/ CSS) valid HTML exporter.
+- *SQLite* -- Browsers like Firefox (~places.sqlite~) and Safari use SQLite
+  databases, worth investigating, and perhaps generating some ~INSERT~ statements.
+- *Nyxt web browser* -- Converting from Scheme to Common Lisp will be a pleasant
+  little feature to add, which will help support the Nyxt web browser.
+- *OS shortcuts* -- ~.desktop~ (Linux), ~.url~ (Windows), ~.webloc~ (macOS): a
+  mode that generates a directory tree on the filesystem populated with these
+  shortcut files.
 
 * Thoughts
 
-By treating your bookmarks as pure, programmable data rather than a hidden database inside a specific browser, you guarantee that *your knowledge base will outlive the software used to view them*.
+By treating your bookmarks as pure, programmable data rather than a hidden
+database inside a specific browser, you guarantee that *your knowledge base will
+outlive the software used to view them*.
 
-Define your bookmarks once in a central file, and let Lenkesamler translate them into whatever format you need today, or whatever format gets invented tomorrow.
+Define your bookmarks once in a central file, and let Lenkesamler translate them
+into whatever format you need today, or whatever format gets invented tomorrow.
 
--------
+* On reproducibility: why GNU Guix?
 
-* On Reproducibility: Why GNU Guix?
-
-A build should never fail because "it worked on my machine." Reliable software development requires explicit, bit-for-bit reproducibility and a functional approach to package management and system deployment.
+A build should never fail because "it worked on my machine." Reliable software
+requires explicit, bit-for-bit reproducibility and a functional approach to
+package management and system deployment.
 
 #+BEGIN_EXPORT html
 <a href="https://guix.gnu.org/">
@@ -486,8 +686,14 @@ A build should never fail because "it worked on my machine." Reliable software d
 </a>
 #+END_EXPORT
 
-- *Declarative Build Graphs:* Packages are pure functions of their inputs with no implicit system state.
+- *Declarative build graphs:* Packages are pure functions of their inputs with no implicit system state.
 - *Programmable with Guile:* Full system and package configurations written in [[https://www.gnu.org/software/guile/][Guile Scheme]] rather than rigid DSLs or static files.
-- *Time Travel:* Rebuild the exact system state from any point in git history using ~guix time-machine~.
-- *Atomic Operations:* Instantly upgrade or roll back environments without leaving orphaned dependencies or broken states.
-- *Unified Tooling:* One tool manages development shells, isolated containers, package builds, and full system configurations.
+- *Time travel:* Rebuild the exact system state from any point in git history using ~guix time-machine~.
+- *Atomic operations:* Instantly upgrade or roll back environments without leaving orphaned dependencies or broken states.
+- *Unified tooling:* One tool manages development shells, isolated containers, package builds, and full system configurations.
+
+* Support this work
+
+If you like my work, please support me by [[https://bmc.link/jjbigorra][buying me a cup of coffee ☕]] so I can
+continue with a lot of motivation. Stars, issues and patches are appreciated just
+as much.

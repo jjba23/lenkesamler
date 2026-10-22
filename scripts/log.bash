@@ -37,5 +37,8 @@ log_info() {
     return 1
   fi
 
-  echo -e "$1"
+  # What the run says about itself goes to the error port: the standard output
+  # is the document, and a document with a banner in front of it is not the
+  # document -- `lenkesamler ... --mode json | jq .' is the reading this is for.
+  echo -e "$1" >&2
 }
