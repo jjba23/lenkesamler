@@ -55,6 +55,34 @@
   (manifest-shell '("guile -L ./src"
                     "-c '((@ (ares server) run-nrepl-server))'")))
 
+(define (test)
+  "Run the project's test suite.
+
+The specs live under test/veritas/unit, which is where the runner looks for a
+suite -- the test root ./test, the module prefix `veritas' and the suite name
+`unit' -- and it is also what their own `(veritas unit ...)' module names
+resolve to on the load path below, next to this project's own sources.
+
+The run names the locale it reads in instead of inheriting one, and names it
+before the runner is asked: Guile reads a page by the locale in force, and this
+suite reads documents that hold more than ASCII -- a bookmark named `R&D', a
+title in another script.  `C.UTF-8' is that name for a machine that has never
+generated a locale, which is what a container, a service and this project's own
+continuous integration are.  The suite sets the clock it reads dates by itself,
+so the machine's timezone is not a part of the reading.
+
+The specs are compiled every run rather than read from a cache.  A compiled
+spec outlives the library it was compiled against -- Guile decides a compiled
+file is still good by the spec's own text, and not by the macros that text was
+compiled with -- so a spec compiled before `(veritas veritas)' changed shape is
+loaded afterwards as if it still had the old one, which reads as a failure
+inside this project.  Compiling from source costs a few seconds and makes the
+reading depend on the specs alone, which is what a suite run to judge a change
+has to be."
+  (time-machine-manifest-shell
+   (list "guile --fresh-auto-compile -L ./src -L . -L ./test"
+         "-c '(begin (setlocale LC_ALL \"C.UTF-8\") (use-modules (veritas runner)) (run-tests))'")))
+
 (define (docs)
   "Generate technical API documentation for Maak."
   (delete-file-recursively "doc")

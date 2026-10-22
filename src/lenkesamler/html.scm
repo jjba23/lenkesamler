@@ -36,7 +36,7 @@
   #:use-module (ice-9 iconv)
   #:use-module (lenkesamler prelude)
   #:use-module (ice-9 threads)
-  #:export (sxml->string sxml->xml))
+  #:export (sxml->string sxml->xml string->escaped-xml))
 
 ;; ====== Serialize (SXML) ======
 
@@ -97,7 +97,7 @@
   (attribute-value->xml value port)
   (display #\" port))
 
-(define (element->xml tag attrs body port)
+(define* (element->xml tag attrs body port #:optional (escape? #f))
   (check-name tag)
   (display #\< port)
   (display tag port)
@@ -121,7 +121,7 @@
           ((body body))
           (cond
             ((pair? body)
-             (sxml->xml (car body) port)
+             (sxml->xml (car body) port escape?)
              (lp (cdr body)))
             ((null? body)
              (display "</" port)
@@ -179,10 +179,14 @@ present."
                                       (cdar elems))))
                      (element->xml tag attrs
                                    (if attrs
-                                       (cdr elems) elems) port)))))
-         ;; A nodelist.
+                                       (cdr elems) elems) port
+                                   escape?)))))
+         ;; A nodelist.  `escape?' is carried into every node of it: a
+         ;; document's root is a nodelist -- the Netscape renderer starts with
+         ;; its doctype string -- so dropping it here would leave a whole
+         ;; document unescaped however the caller asked for it.
          (for-each (lambda (x)
-                     (sxml->xml x port)) tree)))
+                     (sxml->xml x port escape?)) tree)))
     ((string? tree)
      (if escape?
          (string->escaped-xml tree port)

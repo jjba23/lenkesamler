@@ -35,11 +35,23 @@
   #:use-module (ice-9 string-fun)
   #:use-module (ice-9 iconv)
   #:use-module (lenkesamler prelude)
+  #:use-module (lenkesamler html)
   #:use-module (ice-9 threads)
   #:export (netscape-bookmark-renderer))
 
+;; Names are text of the document, not markup of it: a bookmark named `R&D' or
+;; `a < b' is written as `R&amp;D' and `a &lt; b', which is what makes the file
+;; a browser imports the file that was written.  The markup collected around
+;; them below is the format's own glue -- the `<DT>' of a line and the `<DL><P>'
+;; of a folder, which this archaic format expects unclosed -- so it is written
+;; as it stands.  An attribute -- the link of a bookmark -- is escaped by the
+;; writer itself, whenever it is written.
+(define (text x)
+  "X as the text of a document: the characters that are markup are entities."
+  (call-with-output-string (lambda (port) (string->escaped-xml x port))))
+
 (define (dir-to-html x)
-  `("\n<DT>" (H3 ,(dir-name x))
+  `("\n<DT>" (H3 ,(text (dir-name x)))
     (DL "<P>"
         ,@(map parse-lenksamler-to-html
                (dir-items x)) "<P>")))
@@ -49,7 +61,7 @@
                    ,@(if (url-added x)
                          `((ADD_DATE ,(ymd-date-to-epoch (url-added x))))
                          '()))
-                ,(url-name x))))
+                ,(text (url-name x)))))
 
 (define (parse-lenksamler-to-html x)
   (cond
@@ -62,7 +74,7 @@
     (else (throw "unknown data type for bookmark" x))))
 
 (define* (netscape-bookmark-renderer xs)
-  (let* ((parsed-nodes (map parse-lenksamler-to-html xs))
+  (let* ((parsed-nodes (map parse-lenksamler-to-html (flatten xs)))
          (tree `("<!DOCTYPE NETSCAPE-Bookmark-file-1>" (META (@ (http-equiv
                                                                  Content-Type)
                                                                 (content

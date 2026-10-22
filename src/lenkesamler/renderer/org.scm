@@ -38,16 +38,15 @@
                          (format #f "\n\n~a ~a\n~a"
                                  (make-string indent #\*)
                                  (dir-name x)
-                                 (org-bookmark-renderer (flatten (dir-items x))
+                                 (org-bookmark-renderer (dir-items x)
                                                         #:indent (+ 1 indent))))
                         ((url-record? x)
                          (format #f "\n- [[~a][~a]]"
                                  (url-string-with-protocol (url-link x))
                                  (url-name x)))
-                        ((list? x)
-                         (map (lambda (item)
-                                (org-bookmark-renderer item
-                                                       #:indent indent))
-                              (flatten x)))
-                        (else (throw "unknown data type for bookmark" x)))) xs)
+                        (else (throw "unknown data type for bookmark" x))))
+                    ;; A bookmarks file is a program: the README builds folders
+                    ;; with `map', so a list can hold lists.  Flattened here, at
+                    ;; the one place every item passes through.
+                    (flatten xs))
                ""))

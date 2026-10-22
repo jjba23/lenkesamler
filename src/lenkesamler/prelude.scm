@@ -76,9 +76,16 @@
 
 (define-syntax-rule (get-setting setting)
   "Get a setting for lenkesamler."
-  (let* ((user-setting (module-variable (resolve-module '(lenkesamler
-                                                          bookmarks)) setting)))
-    (variable-ref user-setting)))
+  (let* ((module (resolve-module '(lenkesamler bookmarks)))
+         (user-setting (module-variable module setting)))
+    ;; A bookmarks file that is loaded but defines no such variable is a
+    ;; mistake in the file, not a bug here: say which file shape is wanted
+    ;; instead of failing inside `variable-ref' with an empty message.
+    (if user-setting
+        (variable-ref user-setting)
+        (error "lenkesamler: no such setting in the bookmarks file"
+               setting
+               "-- a bookmarks file must define the module (lenkesamler bookmarks) and, in it, a lenkesamler-bookmarks list"))))
 
 (define (ymd-date-to-epoch date)
   (let* ((parsed (string->date date "~Y-~m-~d"))
@@ -94,11 +101,31 @@
              (flatten (cdr x))))
     (else (list x))))
 
+(define url-schemes
+  '("http" "https" "ftp" "ftps" "sftp" "mailto" "gemini" "gopher" "irc"
+    "ircs" "magnet" "ssh" "git" "file" "tel" "news" "nntp" "data" "ws"
+    "wss" "urn" "xmpp"))
+
+(define (absolute-url? x)
+  "Whether X already names the URL scheme it is reached by.
+
+Only the schemes listed above count: `example.org:8080/status' is a host and
+its port, not a document written in a scheme called `example.org', so it is
+still handed the fallback protocol."
+  (let ((colon (string-index x #\:)))
+    (and colon
+         (if (member (string-downcase (substring x 0 colon)) url-schemes)
+             #t
+             #f))))
+
 (define* (url-string-with-protocol x
                                    #:key (fallback-protocol "https://"))
-  (cond
-    ((string-prefix? "https:" x)
-     x)
-    ((string-prefix? "http:" x)
-     x)
-    (else (format #f "~a~a" fallback-protocol x))))
+  "X as a URL a browser can follow.
+
+A link written without a scheme -- which is how most of a bookmarks file is
+written, `codeberg.org/jjba23' -- is reached over FALLBACK-PROTOCOL.  A link
+that already names its own scheme keeps it, whatever the scheme is: a
+`mailto:' address and an `ftp:' archive are as much bookmarks as a web page."
+  (if (absolute-url? x)
+      x
+      (format #f "~a~a" fallback-protocol x)))

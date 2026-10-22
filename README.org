@@ -28,6 +28,18 @@ guix time-machine --channels=channels.scm -- shell -f guix.scm -- \
      lenkesamler --file ./bookmarks/joe.scm --destination ./bookmarks-export.html --mode md
 #+end_src
 
+The document is written to the file ~--destination~ names, or to the standard
+output when no destination is named -- which is what makes
+~lenkesamler ... --mode json | jq .~ a run of lenkesamler.  What the run says
+about itself goes to the error port, so it never lands in the document.
+
+The test suite is the specs under ~test/veritas/unit~, written with
+[[https://codeberg.org/jjba23/veritas][Veritas]].  Run all of them with:
+
+#+begin_src shell
+maak test
+#+end_src
+
 ---------------
 
 Browsers come and go. Syncing services shut down, change their pricing, or pivot to new business models. But your curated bookmarks and knowledge? They are your personal library, your second brain, and your map of the web.
