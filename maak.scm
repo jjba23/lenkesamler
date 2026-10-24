@@ -151,3 +151,13 @@ has to be."
 (define (dev)
   "Developer's setup."
   (hot-reload))
+
+;; ====== Container tasks ======
+
+(define (container-build)
+  "Build the container image for lenkesamler."
+  ($ '("podman build -t lenkesamler .")))
+
+(define (container-run)
+  "Run the container image for lenkesamler."
+  ($ '("podman run --rm -it lenkesamler:latest")))

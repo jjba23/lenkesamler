@@ -1,0 +1,66 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+
+GUILE_VER = 3.0
+SITE_DIR = debian/lenkesamler/usr/share/guile/site/$(GUILE_VER)
+BUILD_SITE = build/site
+BUILD_CCACHE = build/ccache
+# Debian's site-ccache lives in the multiarch libdir; ask Guile's
+# pkg-config file instead of hard-coding a path that would be wrong
+# on the next architecture.
+CCACHE_DIR = $(shell pkg-config --variable=siteccachedir guile-3.0)
+
+%:
+	dh $@
+
+# Guile's .go files are ELF objects whose debug sections dwz does
+# not understand; there is no separate debug binary to compress.
+override_dh_dwz:
+
+override_dh_auto_configure:
+	# Nothing to configure: Scheme sources plus (for applications) a
+	# bash launcher, installed by hand below.
+
+override_dh_auto_build:
+	mkdir -p $(BUILD_SITE)/lenkesamler $(BUILD_CCACHE)/lenkesamler
+	cp -r src/lenkesamler/. $(BUILD_SITE)/lenkesamler/
+
+	# Byte-compile every module so that loading it does not compile it
+	# again on first use.
+	find $(BUILD_SITE)/lenkesamler -name '*.scm' | while read -r scm_file; do \
+		rel_path="$${scm_file#$(BUILD_SITE)/}"; \
+		go_file="$(BUILD_CCACHE)/$${rel_path%.scm}.go"; \
+		mkdir -p "$$(dirname "$$go_file")"; \
+		guild compile -L $(BUILD_SITE) -o "$$go_file" "$$scm_file"; \
+	done
+
+override_dh_auto_test:
+	mkdir -p reports/spec
+	VERITAS_TEST_TYPE=unit VERITAS_RUN_BENCHMARKS=false guile -L ./src -L ./test -c '((@ (veritas runner) run-tests))'
+
+override_dh_auto_install:
+	# Launcher.  It resolves its modules and resources relative to
+	# its own prefix, so it is installed next to the site directory.
+	install -Dm 0755 scripts/lenkesamler debian/lenkesamler/usr/bin/lenkesamler
+	# Upstream reads resources and the log helper from the generic
+	# share/resources and share/scripts; several of these packages
+	# would clash there, so both move under share/lenkesamler/.
+	sed -i 's|share/resources|share/lenkesamler/resources|g; s|share/scripts|share/lenkesamler/scripts|g' debian/lenkesamler/usr/bin/lenkesamler
+
+	# Scheme sources and their byte-compiled copies.
+	mkdir -p $(SITE_DIR) debian/lenkesamler$(CCACHE_DIR)
+	cp -r $(BUILD_SITE)/lenkesamler $(SITE_DIR)/
+	cp -r $(BUILD_CCACHE)/lenkesamler debian/lenkesamler$(CCACHE_DIR)/
+
+	# Resources the launcher passes to the program: help text and,
+	# depending on the project, templates, themes or migrations.
+	mkdir -p debian/lenkesamler/usr/share/lenkesamler/resources
+	cp -r resources/. debian/lenkesamler/usr/share/lenkesamler/resources/
+
+	# Logging helper sourced by the launcher.
+	install -Dm 0644 scripts/log.bash debian/lenkesamler/usr/share/lenkesamler/scripts/log.bash
+
+override_dh_auto_clean:
+	rm -rf build
+	dh_auto_clean

@@ -1,0 +1,34 @@
+Source: lenkesamler
+Section: utils
+Priority: optional
+Maintainer: Josep Bigorra <jjbigorra@gmail.com>
+# veritas is produced by the same packaging batch; build it first.
+Build-Depends:
+ debhelper-compat (= 13),
+ guile-3.0,
+ guile-3.0-dev,
+ pkg-config,
+ guile-json,
+ guile-library,
+ veritas
+Standards-Version: 4.6.2
+Homepage: https://codeberg.org/jjba23/lenkesamler
+Vcs-Git: https://codeberg.org/jjba23/lenkesamler.git
+Vcs-Browser: https://codeberg.org/jjba23/lenkesamler
+Rules-Requires-Root: no
+
+Package: lenkesamler
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+ guile-3.0,
+ guile-json,
+ guile-library,
+ bash,
+ coreutils
+Description: Bookmark manager, sync tool and archiver in Guile Scheme
+ Lenkesamler keeps bookmarks in one Scheme file and writes them out in the
+ formats other tools read: the file a browser imports, Markdown, Org, CSV,
+ JSON, XBEL or a plain terminal listing. It can check the links it holds and
+ import an existing bookmark file.
