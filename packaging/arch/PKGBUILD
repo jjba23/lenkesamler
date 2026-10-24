@@ -42,7 +42,7 @@ checkdepends=(
 )
 
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('ce229f1c53b58739b47fe0a53919ee66155d6d67e8819de4f115b634ffe0a5cc')
+sha256sums=('116026b236fe3c316704bd99a8f16c71c0f6ecaf91ef29cd199ed36177c88f4a')
 
 # veritas is produced by the same packaging batch; build it first.
 
