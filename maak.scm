@@ -42,7 +42,7 @@
 
 (define (help)
   "Display program help screen."
-  (time-machine-program-shell '("lenkesamler --help")))
+  (time-machine-program-shell (list "lenkesamler" "--help")))
 
 (define (default)
   "Default task to run, call program's help."
@@ -50,13 +50,17 @@
 
 (define (fmt)
   "Format Scheme source code files according to the Guix style guide."
-  ($ '("find . -maxdepth 8 -name '*.scm'" "-type f -exec guix style -f {} \\;")
-     #:verbose? #t))
+  ;; The task named `run' below shadows the helper of the same name, so the
+  ;; module that defines it is named here.
+  ((@ (maak maak) run)
+   (list "find" "." "-maxdepth" "8" "-name" "*.scm"
+         "-type" "f" "-exec" "guix" "style" "-f" "{}" ";")
+   #:verbose? #t))
 
 (define (repl)
   "Development REPL."
-  (manifest-shell '("guile -L ./src"
-                    "-c '((@ (ares server) run-nrepl-server))'")))
+  (manifest-shell (list "guile" "-L" "./src"
+                        "-c" "'((@ (ares server) run-nrepl-server))'")))
 
 (define (test)
   "Run the project's test suite.
@@ -83,16 +87,16 @@ inside this project.  Compiling from source costs a few seconds and makes the
 reading depend on the specs alone, which is what a suite run to judge a change
 has to be."
   (time-machine-manifest-shell
-   (list "guile --fresh-auto-compile -L ./src -L . -L ./test"
-         "-c '(begin (setlocale LC_ALL \"C.UTF-8\") (use-modules (veritas runner)) (run-tests))'")))
+   (list "guile" "--fresh-auto-compile" "-L" "./src" "-L" "." "-L" "./test"
+         "-c" "'(begin (setlocale LC_ALL \"C.UTF-8\") (use-modules (veritas runner)) (run-tests))'")))
 
 (define (docs)
   "Generate technical API documentation for Maak."
   (delete-file-recursively "doc")
-  (time-machine-manifest-shell (list (~ "documenta api ./src/~a && "
-                                        project-name)
-                                     (~ "texi2any -v --html --css-ref=~a"
-                                        api-docs-css-url)
+  (time-machine-manifest-shell (list "documenta" "api"
+                                     (~ "./src/~a" project-name)))
+  (time-machine-manifest-shell (list "texi2any" "-v" "--html"
+                                     (~ "--css-ref=~a" api-docs-css-url)
                                      "./doc/api/index.texi"))
   (mv "./index" "./doc/api-dist"))
 
@@ -101,29 +105,33 @@ has to be."
   ;; Deploy API docs
   (remkdir-p (~ "~a/api-docs/~a" deploy-dir project-name))
   (mv "doc/api-dist/*"
-      (~ "~a/api-docs/~a" deploy-dir project-name))
+      (~ "~a/api-docs/~a" deploy-dir project-name)
+      #:expand? #t)
   (delete-file-recursively "doc"))
 
 (define (package-docker)
-  "Create a Docker image for Iter Vitae."
-  (time-machine-manifest-shell '("guix pack --file=./guix.scm"
-                                 "--format=docker" "--image-tag=lenkesamler"
-                                 "-S /bin=bin"
-                                 "bash coreutils util-linux-with-udev guile")))
+  "Build the container image for Lenkesamler."
+  ;; `guix-pack' would run the ambient Guix; this project builds its image at
+  ;; the revision channels.scm pins, inside the manifest shell, as before.
+  (time-machine-manifest-shell
+   (list "guix" "pack" "--file=./guix.scm" "--format=docker"
+         "--image-tag=lenkesamler" "-S" "/bin=bin"
+         "bash" "coreutils" "util-linux-with-udev" "guile")))
 
 (define (dev-run* bookmarks-file)
-  (time-machine-manifest-shell (list
-                                "guile -L ./src -c '((@(lenkesamler main) main))'"
-                                (~
-                                 "--file /home/joe/Hacking/lenkesamler/bookmarks/~a.scm"
-                                 bookmarks-file)
-                                "--destination ./bookmarks-export.html")
-                               #:verbose? #t))
+  (time-machine-manifest-shell
+   (list "guile" "-L" "./src"
+         "-c" "'((@(lenkesamler main) main))'"
+         (~ "--file /home/joe/Hacking/lenkesamler/bookmarks/~a.scm"
+            bookmarks-file)
+         "--destination" "./bookmarks-export.html")
+   #:verbose? #t))
 
 (define (run* bookmarks-file)
-  (time-machine-program-shell (list (~ "lenkesamler --file ./bookmarks/~a.scm"
-                                     bookmarks-file)
-                                    "--destination ./bookmarks-export.html")
+  (time-machine-program-shell (list "lenkesamler"
+                                    (~ "--file ./bookmarks/~a.scm"
+                                       bookmarks-file)
+                                    "--destination" "./bookmarks-export.html")
                               #:verbose? #t))
 
 (define (run)
@@ -136,16 +144,17 @@ has to be."
 
 (define (hot-reload)
   "Hot-reloading developer's setup."
-  (time-machine-manifest-shell (list "watchexec"
-                                     "--clear"
-                                     (~ "--exts ~a"
-                                        (string-join (map symbol->string
-                                                      hot-reload-file-types)
-                                                     ","))
-                                     "--on-busy-update=restart"
-                                     "--shell bash"
-                                     "--watch . --"
-                                     "maak run")))
+  (time-machine-manifest-shell
+   (list "watchexec"
+         "--clear"
+         (~ "--exts ~a"
+            (string-join (map symbol->string
+                              hot-reload-file-types)
+                         ","))
+         "--on-busy-update=restart"
+         "--shell" "bash"
+         "--watch" "." "--"
+         "maak" "run")))
 
 (define (hr)
   "Alias to hot-reloading."

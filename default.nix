@@ -35,7 +35,7 @@
 
 stdenv.mkDerivation {
   pname = "lenkesamler";
-  version = "0.0.4";
+  version = "0.0.5";
 
   src = ./.;
 

@@ -20,7 +20,7 @@
 %global debug_package %{nil}
 
 Name:           lenkesamler
-Version:        0.0.3
+Version:        0.0.5
 Release:        0
 Summary:        Bookmark manager, sync tool and archiver in Guile Scheme
 License:        AGPL-3.0-or-later
