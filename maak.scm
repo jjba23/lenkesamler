@@ -17,6 +17,9 @@
 
 (define-module (maak)
   #:use-module (maak maak)
+  ;; The container helpers are imported under a prefix because the tasks
+  ;; below are named the way maak exposes them on the command line.
+  #:use-module ((maak container) #:prefix ct:)
   #:declarative? #t)
 
 ;; ====== Maak constants ======
@@ -156,8 +159,8 @@ has to be."
 
 (define (container-build)
   "Build the container image for lenkesamler."
-  ($ '("podman build -t lenkesamler .")))
+  (ct:container-build "." #:tag "lenkesamler:latest" #:verbose? #t))
 
 (define (container-run)
   "Run the container image for lenkesamler."
-  ($ '("podman run --rm -it lenkesamler:latest")))
+  (ct:container-run "lenkesamler" #:interactive? #t #:tty? #t #:verbose? #t))
