@@ -13,6 +13,10 @@ This project adheres loosely to [[https://semver.org/spec/v2.0.0.html][Semantic 
 
 *[Released]*
 
+** v0.0.8 (2026-11-10)
+
+- The repository now carries ~.github/FUNDING.yml~, so GitHub shows a Sponsor button that points at [[https://buymeacoffee.com/jjbigorra][Buy Me a Coffee]].
+
 ** v0.0.2 (2026-10-22)
 
 A maintenance release: the sources are identical to *v0.0.1*, the first tagged
