@@ -74,7 +74,7 @@ tests.  Veritas shuffles tests and runs them concurrently by default.")
                           guile-json-4
                           guile-veritas
                           watchexec
-                          texinfo
+                          (specification->package "texinfo")
                           ;; The API documentation generator.  It is defined
                           ;; by the jointhefreeworld channel `channels.scm'
                           ;; pins, so it is resolved by name against the
