@@ -17,6 +17,7 @@
 
 (use-modules (guix packages)
              (gnu)
+             (gnu packages)
              (guix utils)
              (guix git-download)
              (guix download)
@@ -74,7 +75,11 @@ tests.  Veritas shuffles tests and runs them concurrently by default.")
                           guile-veritas
                           watchexec
                           texinfo
-                          guile-documenta
+                          ;; The API documentation generator.  It is defined
+                          ;; by the jointhefreeworld channel `channels.scm'
+                          ;; pins, so it is resolved by name against the
+                          ;; channels rather than imported from a module.
+                          (specification->package "guile-dokgen")
                           guile-ares-rs
                           ;; A check of a bookmarks file asks https addresses, and
                           ;; Guile's web client asks GnuTLS to do it: the bindings

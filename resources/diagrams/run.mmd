@@ -1,0 +1,8 @@
+flowchart LR
+  source["bookmarks/joe.scm"] --> run["lenkesamler --file"]
+  run --> check{"--check?"}
+  check -- yes --> report["report of every link<br/>exit 1 on a dead one"]
+  check -- no --> mode{"--mode"}
+  mode --> formats["scheme<br/>org<br/>markdown<br/>json<br/>csv<br/>netscape<br/>xbel<br/>cli"]
+  report --> out["destination file<br/>or standard output"]
+  formats --> out

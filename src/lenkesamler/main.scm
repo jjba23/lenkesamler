@@ -15,6 +15,35 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with lenkesamler. If not, see <https://www.gnu.org/licenses/>.
 
+;;; Commentary:
+;;
+;; What one run of lenkesamler does.
+;;
+;; A run reads exactly one file: this project's own bookmarks DSL, or a file a
+;; browser exported, which is a migration rather than a rendering and yields the
+;; DSL's own mode.  The bookmarks that come out are either checked -- every link
+;; asked for, and a dead one makes the run exit 1 so a pipeline hears about it --
+;; or rendered through the renderer the mode names.  Either way the result is one
+;; document, written to the file a run named or to the standard output, and the
+;; report of the run goes to the error port so that a redirected output holds
+;; the document and nothing else.
+;;
+;; ```mermaid
+;; flowchart LR
+;;   file["bookmarks file<br/>(the Scheme DSL)"] --> load["bookmarks-of-file"]
+;;   browser["a browser's export"] --> import["bookmarks-of-import"]
+;;   load --> bookmarks["bookmarks"]
+;;   import --> bookmarks
+;;   bookmarks --> check{"--check?"}
+;;   check -- yes --> report["check-bookmarks<br/>and check-report"]
+;;   check -- no --> render["render-bookmarks<br/>one renderer per mode"]
+;;   report --> emit["emit"]
+;;   render --> emit
+;;   emit --> out["--destination file<br/>or standard output"]
+;; ```
+;;
+;;; Code:
+
 (define-module (lenkesamler main)
   #:declarative? #f
   #:use-module (ice-9 getopt-long)

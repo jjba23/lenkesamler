@@ -18,6 +18,8 @@
 (define-module (maak)
   #:use-module (maak maak)
   #:use-module ((ice-9 rdelim) #:select (read-line))
+  ;; `scandir' lists the mermaid sources the `diagrams' task renders.
+  #:use-module (ice-9 ftw)
   ;; The container helpers are imported under a prefix because the tasks
   ;; below are named the way maak exposes them on the command line.
   #:use-module ((maak container) #:prefix ct:)
@@ -92,14 +94,57 @@ has to be."
          "-c" "'(begin (setlocale LC_ALL \"C.UTF-8\") (use-modules (veritas runner)) (run-tests))'")))
 
 (define (docs)
-  "Generate technical API documentation for Maak."
+  "Generate technical API documentation for Lenkesamler.
+
+`dokgen' writes the chapter to doc/api and draws the mermaid diagrams the
+commentaries carry into doc/api/diagrams.  `texi2any' copies neither a
+stylesheet, a script nor an image into its output, so the HTML goes to
+doc/api-dist and the three are copied beside it afterwards."
   (delete-file-recursively "doc")
-  (time-machine-manifest-shell (list "documenta" "api"
+  (time-machine-manifest-shell (list "dokgen" "api"
+                                     "--destination" "doc/api"
                                      (~ "./src/~a" project-name)))
-  (time-machine-manifest-shell (list "texi2any" "-v" "--html"
-                                     (~ "--css-ref=~a" api-docs-css-url)
-                                     "./doc/api/index.texi"))
-  (mv "./index" "./doc/api-dist"))
+  (mkdir-p "doc/api-dist")
+  ;; `-I doc/api' is what finds the diagrams beside the chapter, and the head
+  ;; below points the pages at the stylesheet and the script `dokgen' writes
+  ;; there.  `--no-split' keeps the manual one page.
+  (time-machine-manifest-shell
+   (list "texi2any" "-v" "--html" "--no-split"
+         (~ "--css-ref=~a" api-docs-css-url)
+         "-I" "doc/api"
+         "-c" (shell-quote
+               (string-append
+                "EXTRA_HEAD="
+                "<link rel=\"stylesheet\" href=\"dokgen.css\">"
+                "<script src=\"dokgen.js\" defer></script>"))
+         "-o" "doc/api-dist/index.html"
+         "./doc/api/index.texi"))
+  (for-each (lambda (asset)
+              (when (file-exists? (~ "doc/api/~a" asset))
+                (cp (~ "doc/api/~a" asset) "doc/api-dist"
+                    #:force? #t #:verbose? #t)))
+            '("dokgen.css" "dokgen.js"))
+  (when (file-exists? "doc/api/diagrams")
+    (cp "doc/api/diagrams" "doc/api-dist" #:force? #t #:verbose? #t)))
+
+(define (diagrams)
+  "Render every mermaid source under resources/diagrams to the SVG beside it.
+
+The images are committed, so this runs only when a diagram's source changes;
+the API documentation's own diagrams are drawn by `dokgen' during `docs'.
+`run' names a task of this file, so the library's runner is named in full."
+  (for-each
+   (lambda (name)
+     (let* ((source (in-vicinity "resources/diagrams" name))
+            (image (string-append (string-drop-right source 4) ".svg")))
+       ((@ (maak maak) run)
+        (list "mmdc" "-i" source "-o" image
+              "--backgroundColor" "transparent")
+        #:verbose? #t)))
+   (scandir "resources/diagrams"
+            (lambda (name)
+              (and (not (member name '("." "..")))
+                   (string-suffix? ".mmd" name))))))
 
 (define (deploy)
   (docs)

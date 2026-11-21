@@ -390,6 +390,15 @@ Supported modes of operation are:
 
 The default mode is ~netscape~.
 
+#+attr_html: :width 720 :alt One bookmarks file, checked or rendered into one document
+[[file:resources/diagrams/run.svg]]
+
+A run reads exactly one file, either checks every link in it or renders it
+through the renderer the mode names, and writes one document to the file it was
+given or to the standard output.  The source of the diagram is
+[[file:resources/diagrams/run.mmd][resources/diagrams/run.mmd]]; ~maak diagrams~
+renders every source under ~resources/diagrams~ to the SVG beside it.
+
 [[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]
 
 * Formats
@@ -724,7 +733,8 @@ or as ~guix shell -m manifest.scm -- maak TASK~.
 | ~maak dev-run~        | Render ~./bookmarks/joe.scm~ to ~./bookmarks-export.html~ from source. |
 | ~maak run~            | The same, using the installed ~lenkesamler~ command.                   |
 | ~maak fmt~            | Format every Scheme file the way Guix formats its own.                 |
-| ~maak docs~           | Build the API documentation in ~doc/~.                                 |
+| ~maak docs~           | Build the API documentation in ~doc/api-dist~.                         |
+| ~maak diagrams~       | Render every mermaid source under ~resources/diagrams~.                |
 | ~maak repl~           | A Guile REPL with the project on the load path (nREPL).                |
 | ~maak dev~            | Re-render on every save (~watchexec~).                                 |
 | ~maak package-docker~ | Build a Docker image with ~guix pack~.                                 |

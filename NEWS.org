@@ -13,6 +13,13 @@ This project adheres loosely to [[https://semver.org/spec/v2.0.0.html][Semantic 
 
 *[Released]*
 
+** v0.0.12 (2026-11-21)
+
+- The API reference is generated with `dokgen` instead of `documenta`, and rendered as one page: `maak docs` writes `doc/api/index.texi` and `doc/api-dist/index.html`, with `dokgen.css`, `dokgen.js` and the drawn diagrams beside it.
+- `channels.scm` pins Guix `5cea8de` and adds the `jointhefreeworld` channel, which is where `guile-dokgen` comes from. `maak test`, `maak repl` and `maak docs` run inside `guix time-machine`, because the manifest names a package that only that channel provides.
+- `maak diagrams` renders every mermaid source under `resources/diagrams` to the SVG beside it. `resources/diagrams/run.svg` is the first one: the run the README describes, drawn.
+- The `(lenkesamler main)` commentary now walks that run in prose and carries the same mermaid source, so the API reference draws it too.
+
 ** v0.0.10 (2026-11-12)
 
 - Builds against the channels this project builds against: the jointhefreeworld collection at v1.0.4, and Guix master `3b4e873`.
