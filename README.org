@@ -9,6 +9,8 @@
 #+attr_html: :width 160 :alt Lenkesamler logo
 [[file:logo.svg]]
 
+- 📖 *API reference:* [[https://jointhefreeworld.org/api-docs/lenkesamler/index.html][Lenkesamler API reference]]
+
 *Lenkesamler* (Norwegian for "link collector") is a bookmark manager, sync tool
 and digital archive: you keep your bookmarks in *one Scheme file*, and it writes
 them out as the file a browser imports, as Markdown, Org, CSV, JSON or XBEL -- or
