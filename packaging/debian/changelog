@@ -1,3 +1,10 @@
+lenkesamler (0.1.0-1) unstable; urgency=medium
+
+  * Relicense under the MIT License.
+  * Run the tests and the deployment on GitHub through Byggsteg.
+
+ -- Josep Bigorra <jjbigorra@gmail.com>  Tue, 24 Nov 2026 14:16:31 +0000
+
 lenkesamler (0.0.10-1) unstable; urgency=medium
 
   * Build against the jointhefreeworld collection at v1.0.4.

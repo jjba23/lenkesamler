@@ -72,7 +72,7 @@ invented tomorrow.
 :CUSTOM_ID: ways-to-install
 :END:
 
-/Four routes to the same 0.0.3, from the most automated to the most manual.  They all build the tag this README documents./
+/Four routes to the same 0.1.0, from the most automated to the most manual.  They all build the tag this README documents./
 
 ** From the Guix channel
 :PROPERTIES:
