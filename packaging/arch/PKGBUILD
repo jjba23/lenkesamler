@@ -9,7 +9,7 @@ pkgver=0.1.0
 pkgrel=1
 pkgdesc="Bookmark manager, sync tool and archiver in Guile Scheme"
 arch=('any')
-url="https://codeberg.org/jjba23/lenkesamler"
+url="https://github.com/jjba23/lenkesamler"
 license=('MIT')
 
 depends=(
@@ -30,7 +30,7 @@ checkdepends=(
 )
 
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('116026b236fe3c316704bd99a8f16c71c0f6ecaf91ef29cd199ed36177c88f4a')
+sha256sums=('622e9220480af2df89be19ff89fea2b5e61664c0fec7704eb22a37a97066dad3')
 
 # veritas is produced by the same packaging batch; build it first.
 
