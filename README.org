@@ -4,7 +4,7 @@
 #+language: en
 #+options: toc:nil num:nil
 
-[[https://jointhefreeworld.org/ggg/dist/scheme-guile.svg]] [[https://jointhefreeworld.org/ggg/dist/gnu-guix.svg]] [[https://jointhefreeworld.org/ggg/dist/maak.svg]] [[https://jointhefreeworld.org/ggg/dist/license-agpl3+.svg]] [[https://jointhefreeworld.org/ggg/dist/license-fdl13+.svg]]
+[[https://jointhefreeworld.org/ggg/dist/scheme-guile.svg]] [[https://jointhefreeworld.org/ggg/dist/gnu-guix.svg]] [[https://jointhefreeworld.org/ggg/dist/maak.svg]] [[https://img.shields.io/badge/license-MIT-2ea44f.svg?style=flat-square]]
 
 #+attr_html: :width 160 :alt Lenkesamler logo
 [[file:logo.svg]]
@@ -65,8 +65,7 @@ invented tomorrow.
   One text file and one command.
 - *Reproducible.* Written for GNU Guix; the development shell, the tests and the
   package are the same on every machine.
-- *Free software, forever.* AGPL-3.0-or-later for the code, FDL-1.3-or-later for
-  this document.
+- *Free software, forever.* MIT licensed, code and documentation alike.
 
 * Ways to install
 :PROPERTIES:
@@ -400,8 +399,6 @@ through the renderer the mode names, and writes one document to the file it was
 given or to the standard output.  The source of the diagram is
 [[file:resources/diagrams/run.mmd][resources/diagrams/run.mmd]]; ~maak diagrams~
 renders every source under ~resources/diagrams~ to the SVG beside it.
-
-[[https://jointhefreeworld.org/static-assets/lenkesamler/lenkesamler-small.png]]
 
 * Formats
 :PROPERTIES:
@@ -805,16 +802,13 @@ creating excellent free software.
 :CUSTOM_ID: license
 :END:
 
-Lenkesamler and all of its source code are free software, licensed under the GNU
-Affero General Public License v3 (or newer at your convenience).
+Lenkesamler and all of its source code are free software, licensed under the MIT
+License.  See [[file:LICENSE][LICENSE]].
 
-https://www.gnu.org/licenses/agpl-3.0.html
+https://opensource.org/license/mit
 
 The documentation and examples, including this document, which are provided with
-Lenkesamler, are all licensed under the GNU Free Documentation License v1.3 (or
-newer at your convenience).
-
-https://www.gnu.org/licenses/fdl-1.3.html
+Lenkesamler, carry the same licence.
 
 * AI policy
 :PROPERTIES:
