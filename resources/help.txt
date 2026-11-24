@@ -3,7 +3,7 @@ Lenkesamler:
     Your bookmark manager and sync tool.
 
     See more at: https://codeberg.org/jjba23/lenkesamler
-    Software licensed under the GNU AGPL v3 or newer.
+    Software licensed under the MIT License.
 
 USAGE: lenkesamler [OPTIONS]
 

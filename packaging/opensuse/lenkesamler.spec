@@ -23,7 +23,7 @@ Name:           lenkesamler
 Version:        0.0.5
 Release:        0
 Summary:        Bookmark manager, sync tool and archiver in Guile Scheme
-License:        AGPL-3.0-or-later
+License:        MIT
 URL:            https://codeberg.org/jjba23/lenkesamler
 Source0:        %{name}-%{version}.tar.gz
 BuildRequires:  pkgconfig(guile-3.0)
@@ -93,7 +93,7 @@ mkdir -p reports/spec
 VERITAS_TEST_TYPE=unit VERITAS_RUN_BENCHMARKS=false guile -L ./src -L ./test -c '((@ (veritas runner) run-tests))'
 
 %files
-%license COPYING
+%license LICENSE
 %doc README.org NEWS.org
 %{_bindir}/lenkesamler
 %dir %{_datadir}/guile

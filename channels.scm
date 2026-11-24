@@ -1,3 +1,8 @@
+;; lenkesamler
+;;
+;; SPDX-License-Identifier: MIT
+;; Copyright © Josep Bigorra <jjbigorra@gmail.com>
+
 (list (channel
         (name 'guix)
         (url "https://git.guix.gnu.org/guix.git")

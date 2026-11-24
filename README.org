@@ -80,7 +80,7 @@ invented tomorrow.
 :END:
 *GNU Guix* is the functional package manager this project is developed with: a build is a pure function of its inputs, so the same recipe gives the same result everywhere, and an upgrade that goes wrong can be rolled back.
 
-The jointhefreeworld channel carries ~lenkesamler~ at 0.0.3, so a checkout of the channel is enough — no package definition to write:
+The jointhefreeworld channel carries ~lenkesamler~, so a checkout of the channel is enough — no package definition to write:
 
 #+begin_src shell
 git clone https://codeberg.org/jjba23/guix-jointhefreeworld.git

@@ -66,7 +66,7 @@ ENV LANG=C.UTF-8 \
 LABEL org.opencontainers.image.title="lenkesamler" \
       org.opencontainers.image.description="Bookmark manager, sync tool and archiver in Guile Scheme" \
       org.opencontainers.image.url="https://codeberg.org/jjba23/lenkesamler" \
-      org.opencontainers.image.licenses="AGPL-3.0-or-later" \
+      org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.version="${VERSION}"
 
 RUN --mount=type=cache,target=/var/cache/zypp \
