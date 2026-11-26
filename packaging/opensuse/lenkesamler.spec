@@ -20,7 +20,7 @@
 %global debug_package %{nil}
 
 Name:           lenkesamler
-Version:        0.1.0
+Version:        0.1.2
 Release:        0
 Summary:        Bookmark manager, sync tool and archiver in Guile Scheme
 License:        MIT

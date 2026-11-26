@@ -1,3 +1,13 @@
+lenkesamler (0.1.2-1) unstable; urgency=medium
+
+  * Pin the jointhefreeworld revision that carries guile-dokgen 0.12.0: the
+    published API reference folds the source behind each definition into a
+    panel a reader opens, on a quieter page.
+  * The package version catches up with the tags: it says 0.1.2, which is the
+    next free patch above v0.1.1.
+
+ -- Josep Bigorra <jjbigorra@gmail.com>  Thu, 26 Nov 2026 12:00:00 +0000
+
 lenkesamler (0.1.0-1) unstable; urgency=medium
 
   * Relicense under the MIT License.

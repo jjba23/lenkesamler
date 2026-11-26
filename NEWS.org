@@ -13,6 +13,11 @@ This project adheres loosely to [[https://semver.org/spec/v2.0.0.html][Semantic 
 
 *[Released]*
 
+** v0.1.2 (2026-11-26)
+
+- The pinned Guix channel carries `guile-dokgen` 0.12.0: the published API reference folds the source behind each definition into a panel a reader opens, and reads on a quieter page with translucent surfaces. `channels.scm` names the jointhefreeworld revision that carries it.
+- The version strings in the packaging recipes and `default.nix` move to 0.1.2, the next free patch above v0.1.1, which the tree had lagged behind, and the README's install section names the tag it documents.
+
 ** v0.1.0 (2026-11-24)
 
 - Lenkesamler is now MIT licensed. `LICENSE` replaces `COPYING`, and the files that carried the AGPL boilerplate carry the two-line SPDX header instead: `SPDX-License-Identifier: MIT`. The documentation, the examples and this file carry the same licence, so the separate FDL notice is gone.
